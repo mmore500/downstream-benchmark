@@ -20,6 +20,17 @@ template <class Tp> inline void DoNotOptimize(Tp &value) {
 #endif
 }
 
+constexpr std::string_view get_compiler_name() {
+  return
+#ifdef __clang__
+  "clang++";
+#elif defined(__GNUC__)
+  "g++";
+#else
+  "unknown";
+#endif
+}
+
 struct benchmark_result {
   std::string_view algo_name;
   uint32_t memory_bytes;
@@ -29,13 +40,15 @@ struct benchmark_result {
   double duration_s;
 
   static std::string_view make_csv_header() {
-    return ("algo_name, memory_bytes, num_items, "
+    return ("algo_name, compiler, memory_bytes, num_items, "
             "num_sites, replicate, duration_s\n");
   }
 
   std::string make_csv_row() const {
-    return std::format("{}, {}, {}, {}, {}, {}\n", algo_name, memory_bytes,
-                       num_items, num_sites, replicate, duration_s);
+    constexpr std::string_view compiler_name = get_compiler_name();
+    return std::format("{}, {}, {}, {}, {}, {}, {}\n", algo_name, compiler_name,
+                       memory_bytes, num_items, num_sites, replicate,
+                       duration_s);
   }
 };
 
