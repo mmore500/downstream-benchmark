@@ -59,17 +59,17 @@ struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
 };
 
-struct control_algo {
-  static std::string_view get_algo_name() { return "control_algo"; }
+struct control_ring_algo {
+  static std::string_view get_algo_name() { return "control_ring_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
-    return T % S;
+    return downstream::_auxlib::modpow2(T, S);
   }
 };
 
-struct control_modpow2_algo {
-  static std::string_view get_algo_name() { return "control_modpow2_algo"; }
+struct control_throwaway_algo {
+  static std::string_view get_algo_name() { return "control_throwaway_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
-    return downstream::_auxlib::modpow2(T, S);
+    return S;
   }
 };
 
@@ -129,6 +129,7 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   }
 
   DoNotOptimize(storage);
+  DoNotOptimize(gen.state);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
@@ -144,6 +145,7 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   }
 
   DoNotOptimize(storage);
+  DoNotOptimize(gen.state);
   return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
@@ -213,8 +215,8 @@ int main() {
   using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
-  benchmark_assign_storage_site<control_algo>(inserter);
-  benchmark_assign_storage_site<control_modpow2_algo>(inserter);
+  benchmark_assign_storage_site<control_ring_algo>(inserter);
+  benchmark_assign_storage_site<control_throwaway_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
