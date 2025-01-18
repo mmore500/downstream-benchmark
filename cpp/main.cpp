@@ -2,6 +2,7 @@
 #include <bitset>
 #include <chrono>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <ranges>
@@ -84,7 +85,10 @@ template <> size_t sizeof_vector(const std::vector<bool> &vec) {
 // adapted from https://en.wikipedia.org/wiki/Xorshift
 struct xorshift_generator {
 
-  uint32_t state = 0xdeadbeef;
+  uint32_t state;
+
+  xorshift_generator() : state(0xdeadbeef) {}
+
   uint32_t operator()() {
     uint32_t x = this->state;
     x ^= x << 13;
@@ -140,8 +144,9 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
+    const bool data = gen() & 1;
     if (k != num_sites)
-      storage[k] = static_cast<bool>(gen() & 1);
+      storage[k] = data;
   }
 
   DoNotOptimize(storage);
