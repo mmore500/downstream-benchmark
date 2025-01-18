@@ -84,7 +84,10 @@ template <> size_t sizeof_vector(const std::vector<bool> &vec) {
 // adapted from https://en.wikipedia.org/wiki/Xorshift
 struct xorshift_generator {
 
-  uint32_t state = 0xdeadbeef;
+  uint32_t state;
+
+  xorshift_generator() : state(0xdeadbeef) {}
+
   uint32_t operator()() {
     uint32_t x = this->state;
     x ^= x << 13;
