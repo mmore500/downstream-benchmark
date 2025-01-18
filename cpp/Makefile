@@ -1,7 +1,7 @@
 CXX ?= g++
 CXXCLANG ?= clang++
 
-CFLAGS_all := -Wall -Wno-unused-function -std=c++23 -I.
+CFLAGS_all := -Wall -Wno-unused-function -std=c++23 -I. -march=native
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
 CFLAGS_nat_debug := -g $(CFLAGS_all)
 
