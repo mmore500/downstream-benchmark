@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cstdint>
 #include <iostream>
+#include <ranges>
 #include <string_view>
 
 #include "downstream/include/downstream/dstream/dstream.hpp"
@@ -38,6 +39,52 @@ struct benchmark_result {
   }
 };
 
+struct naive_steady_algo {
+  static std::string_view get_algo_name() { return "naive_steady_algo"; }
+};
+
+template <typename T> size_t sizeof_vector(const std::vector<T> &vec) {
+  return sizeof(vec) + vec.size() * sizeof(T);
+}
+
+template <> size_t sizeof_vector(const std::vector<bool> &vec) {
+  return sizeof(vec) + (vec.size() + 7) / 8;
+}
+
+template <uint32_t num_sites>
+__attribute__((hot)) uint32_t
+execute_naive_assign_storage_site(const uint32_t num_items) {
+  std::vector<uint32_t> segment_lengths;
+  std::vector<bool> storage;
+  segment_lengths.reserve(num_sites);
+  storage.reserve(num_sites);
+
+  for (uint32_t i = 0; i < num_items; ++i) {
+    const bool data = i & 1;
+    storage.push_back(data);
+    segment_lengths.push_back(1);
+
+    if (storage.size() <= num_sites)
+      continue;
+
+    const auto indexRange = std::views::iota(size_t{}, storage.size() - 1);
+    const auto collapse_idx = *std::ranges::min_element(
+        indexRange, [&](std::size_t i1, std::size_t i2) {
+          const auto sum1 = segment_lengths[i1] + segment_lengths[i1 + 1];
+          const auto sum2 = segment_lengths[i2] + segment_lengths[i2 + 1];
+          return sum1 < sum2;
+        });
+
+    segment_lengths[collapse_idx] += segment_lengths[collapse_idx + 1];
+    storage.erase(std::next(std::begin(storage), collapse_idx + 1));
+    segment_lengths.erase(
+        std::next(std::begin(segment_lengths), collapse_idx + 1));
+  }
+
+  DoNotOptimize(storage);
+  return sizeof_vector(storage) + sizeof_vector(segment_lengths);
+}
+
 template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
@@ -51,18 +98,32 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
-template <typename dstream_algo, uint32_t num_sites>
-benchmark_result time_dstream_assign_storage_site(const uint32_t replicate,
-                                                  const uint32_t num_items) {
+template <uint32_t num_sites, typename algo>
+struct execute_assign_storage_site {
+  static uint32_t operator()(const uint32_t num_items) {
+    return execute_dstream_assign_storage_site<algo, num_sites>(num_items);
+  }
+};
+
+template <uint32_t num_sites>
+struct execute_assign_storage_site<num_sites, naive_steady_algo> {
+  static uint32_t operator()(const uint32_t num_items) {
+    return execute_naive_assign_storage_site<num_sites>(num_items);
+  }
+};
+
+template <typename algo, uint32_t num_sites>
+benchmark_result time_assign_storage_site(const uint32_t replicate,
+                                          const uint32_t num_items) {
   using std::chrono::duration_cast;
   using std::chrono::high_resolution_clock;
 
   const auto t1 = high_resolution_clock::now();
-  const auto memory_bytes =
-      execute_dstream_assign_storage_site<dstream_algo, num_sites>(num_items);
+  using executor = execute_assign_storage_site<num_sites, algo>;
+  const auto memory_bytes = executor::operator()(num_items);
   const auto t2 = high_resolution_clock::now();
 
-  return {.algo_name = dstream_algo::get_algo_name(),
+  return {.algo_name = algo::get_algo_name(),
           .memory_bytes = memory_bytes,
           .num_items = num_items,
           .num_sites = num_sites,
@@ -71,34 +132,34 @@ benchmark_result time_dstream_assign_storage_site(const uint32_t replicate,
               duration_cast<std::chrono::duration<double>>(t2 - t1).count()};
 }
 
-template <typename dstream_algo, uint32_t num_sites, typename OutputIt>
-void benchmark_dstream_assign_storage_site_(OutputIt out) {
+template <typename algo, uint32_t num_sites, typename OutputIt>
+void benchmark_assign_storage_site_(OutputIt out) {
   const uint32_t num_replicates = 20;
   for (const uint32_t num_items : {1'000, 1'000'000}) {
     uint32_t replicate{};
     std::generate_n(out, num_replicates, [num_items, &replicate]() {
-      return time_dstream_assign_storage_site<dstream_algo, num_sites>(
-          replicate++, num_items);
+      return time_assign_storage_site<algo, num_sites>(replicate++, num_items);
     });
   }
 }
 
-template <typename dstream_algo, typename OutputIt>
-void benchmark_dstream_assign_storage_site(OutputIt out) {
-  benchmark_dstream_assign_storage_site_<dstream_algo, 64>(out);
-  benchmark_dstream_assign_storage_site_<dstream_algo, 256>(out);
-  benchmark_dstream_assign_storage_site_<dstream_algo, 1024>(out);
-  benchmark_dstream_assign_storage_site_<dstream_algo, 4096>(out);
+template <typename algo, typename OutputIt>
+void benchmark_assign_storage_site(OutputIt out) {
+  benchmark_assign_storage_site_<algo, 64>(out);
+  benchmark_assign_storage_site_<algo, 256>(out);
+  benchmark_assign_storage_site_<algo, 1024>(out);
+  benchmark_assign_storage_site_<algo, 4096>(out);
 }
 
 int main() {
   using std::chrono::duration_cast;
   using std::chrono::high_resolution_clock;
 
-  using dstream_algo = downstream::dstream::steady_algo_<uint32_t>;
+  using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
   std::vector<benchmark_result> results;
-  benchmark_dstream_assign_storage_site<dstream_algo>(
-      std::back_inserter(results));
+  auto inserter = std::back_inserter(results);
+  benchmark_assign_storage_site<dstream_steady_algo>(inserter);
+  benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
   std::cout << benchmark_result::make_csv_header();
   for (const auto &result : results)
