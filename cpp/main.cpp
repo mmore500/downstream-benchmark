@@ -94,6 +94,7 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   std::vector<bool> storage;
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
+  DoNotOptimize(storage);
 
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
@@ -118,7 +119,6 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
         std::next(std::begin(segment_lengths), collapse_idx + 1));
   }
 
-  DoNotOptimize(storage);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
@@ -126,13 +126,13 @@ template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
   std::bitset<num_sites> storage;
+  DoNotOptimize(storage);
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
     if (k != num_sites) storage[k] = gen() & 1;
   }
 
-  DoNotOptimize(storage);
   return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
