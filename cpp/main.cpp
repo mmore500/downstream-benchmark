@@ -24,11 +24,11 @@ template <class Tp> inline void DoNotOptimize(Tp &value) {
 constexpr std::string_view get_compiler_name() {
   return
 #ifdef __clang__
-  "clang++";
+      "clang++";
 #elif defined(__GNUC__)
-  "g++";
+      "g++";
 #else
-  "unknown";
+      "unknown";
 #endif
 }
 
@@ -41,13 +41,13 @@ struct benchmark_result {
   double duration_s;
 
   static std::string_view make_csv_header() {
-    return ("algo_name, compiler, memory_bytes, num_items, "
-            "num_sites, replicate, duration_s\n");
+    return ("algo_name,compiler,memory_bytes,num_items,"
+            "num_sites,replicate,duration_s\n");
   }
 
   std::string make_csv_row() const {
     constexpr std::string_view compiler_name = get_compiler_name();
-    return std::format("{}, {}, {}, {}, {}, {}, {}\n", algo_name, compiler_name,
+    return std::format("{},{},{},{},{},{},{}\n", algo_name, compiler_name,
                        memory_bytes, num_items, num_sites, replicate,
                        duration_s);
   }
@@ -55,6 +55,13 @@ struct benchmark_result {
 
 struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
+};
+
+struct control_algo {
+  static std::string_view get_algo_name() { return "control_algo"; }
+  static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
+    return T % S;
+  }
 };
 
 template <typename T> size_t sizeof_vector(const std::vector<T> &vec) {
@@ -65,6 +72,21 @@ template <> size_t sizeof_vector(const std::vector<bool> &vec) {
   return sizeof(vec) + (vec.size() + 7) / 8;
 }
 
+// adapted from https://en.wikipedia.org/wiki/Xorshift
+struct xorshift_generator {
+
+  uint32_t state = 0xdeadbeef;
+  uint32_t operator()() {
+    uint32_t x = this->state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    this->state = x;
+    return x;
+  }
+
+};
+
 template <uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_naive_assign_storage_site(const uint32_t num_items) {
@@ -73,8 +95,9 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
 
+  xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const bool data = i & 1;
+    const bool data = gen() & 1;
     storage.push_back(data);
     segment_lengths.push_back(1);
 
@@ -103,9 +126,10 @@ template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
   std::bitset<num_sites> storage;
+  xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    storage[k] = i & 1;
+    if (k != num_sites) storage[k] = gen() & 1;
   }
 
   DoNotOptimize(storage);
@@ -172,6 +196,7 @@ int main() {
   using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
+  benchmark_assign_storage_site<control_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
