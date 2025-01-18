@@ -88,6 +88,7 @@ void benchmark_dstream_assign_storage_site(OutputIt out) {
   benchmark_dstream_assign_storage_site_<dstream_algo, 64>(out);
   benchmark_dstream_assign_storage_site_<dstream_algo, 256>(out);
   benchmark_dstream_assign_storage_site_<dstream_algo, 1024>(out);
+  benchmark_dstream_assign_storage_site_<dstream_algo, 4096>(out);
 }
 
 int main() {
