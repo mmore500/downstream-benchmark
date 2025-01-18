@@ -2,6 +2,7 @@
 #include <bitset>
 #include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <iostream>
 #include <ranges>
 #include <string_view>
@@ -186,7 +187,13 @@ void benchmark_assign_storage_site_(OutputIt out) {
   for (const uint32_t num_items : {10'000, 100'000, 1'000'000}) {
     uint32_t replicate{};
     std::generate_n(out, num_replicates, [num_items, &replicate]() {
-      return time_assign_storage_site<algo, num_sites>(replicate++, num_items);
+      const auto env_var = std::getenv("DSTREAM_OBFUSCATE_UNSET_ENV_VAR") ?: "";
+      // prevent compiler from knowing num_items in advance
+      const uint32_t obfuscated_num_items = num_items + std::strlen(env_var);
+      return time_assign_storage_site<algo, num_sites>(
+        replicate++,
+        obfuscated_num_items
+      );
     });
   }
 }
