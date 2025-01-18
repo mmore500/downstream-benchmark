@@ -1,7 +1,7 @@
 CXX ?= g++
 CXXCLANG ?= clang++
 
-CFLAGS_all := -Wall -Wno-unused-function -std=c++20 -I.
+CFLAGS_all := -Wall -Wno-unused-function -std=c++23 -I.
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
 CFLAGS_nat_debug := -g $(CFLAGS_all)
 
@@ -19,7 +19,7 @@ debug: release
 release: $(MAIN_BIN)
 
 check:
-	@echo "Checking C++20 compatibility..."
+	@echo "Checking C++23 compatibility..."
 	@for file in $(HEADERS) $(MAIN_BIN).cpp; do \
 		echo "Checking $$file with GCC..."; \
 		$(CXX) $(CFLAGS_nat) -fsyntax-only "$$file" || exit 1; \
@@ -28,7 +28,7 @@ check:
 			$(CXXCLANG) $(CFLAGS_nat) -fsyntax-only "$$file" || exit 1; \
 		fi \
 	done
-	@echo "All files pass C++20 syntax check"
+	@echo "All files pass C++23 syntax check"
 
 $(MAIN_BIN): $(MAIN_BIN).cpp $(HEADERS)
 	@mkdir -p $(dir $@)
