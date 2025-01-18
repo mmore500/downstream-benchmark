@@ -175,7 +175,7 @@ benchmark_result time_assign_storage_site(const uint32_t replicate,
 template <typename algo, uint32_t num_sites, typename OutputIt>
 void benchmark_assign_storage_site_(OutputIt out) {
   const uint32_t num_replicates = 20;
-  for (const uint32_t num_items : {1'000, 1'000'000}) {
+  for (const uint32_t num_items : {10'000, 100'000, 1'000'000}) {
     uint32_t replicate{};
     std::generate_n(out, num_replicates, [num_items, &replicate]() {
       return time_assign_storage_site<algo, num_sites>(replicate++, num_items);
