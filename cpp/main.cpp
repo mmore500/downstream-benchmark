@@ -41,13 +41,13 @@ struct benchmark_result {
   double duration_s;
 
   static std::string_view make_csv_header() {
-    return ("algo_name, compiler, memory_bytes, num_items, "
-            "num_sites, replicate, duration_s\n");
+    return ("algo_name,compiler,memory_bytes,num_items,"
+            "num_sites,replicate,duration_s\n");
   }
 
   std::string make_csv_row() const {
     constexpr std::string_view compiler_name = get_compiler_name();
-    return std::format("{}, {}, {}, {}, {}, {}, {}\n", algo_name, compiler_name,
+    return std::format("{},{},{},{},{},{},{}\n", algo_name, compiler_name,
                        memory_bytes, num_items, num_sites, replicate,
                        duration_s);
   }
