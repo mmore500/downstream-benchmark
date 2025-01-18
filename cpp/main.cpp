@@ -41,14 +41,14 @@ struct benchmark_result {
 template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
-  std::bitset<num_sites> storage_sites;
+  std::bitset<num_sites> storage;
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    storage_sites[k] = i & 1;
+    storage[k] = i & 1;
   }
 
-  DoNotOptimize(storage_sites);
-  return sizeof(storage_sites) + sizeof(uint32_t /* i */);
+  DoNotOptimize(storage);
+  return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
 template <typename dstream_algo, uint32_t num_sites>
