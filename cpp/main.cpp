@@ -24,11 +24,11 @@ template <class Tp> inline void DoNotOptimize(Tp &value) {
 constexpr std::string_view get_compiler_name() {
   return
 #ifdef __clang__
-  "clang++";
+      "clang++";
 #elif defined(__GNUC__)
-  "g++";
+      "g++";
 #else
-  "unknown";
+      "unknown";
 #endif
 }
 
