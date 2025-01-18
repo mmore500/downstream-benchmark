@@ -59,17 +59,17 @@ struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
 };
 
-struct control_algo {
-  static std::string_view get_algo_name() { return "control_algo"; }
+struct control_ring_algo {
+  static std::string_view get_algo_name() { return "control_ring_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
-    return T % S;
+    return downstream::_auxlib::modpow2(T, S);
   }
 };
 
-struct control_modpow2_algo {
-  static std::string_view get_algo_name() { return "control_modpow2_algo"; }
+struct control_throwaway_algo {
+  static std::string_view get_algo_name() { return "control_throwaway_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
-    return downstream::_auxlib::modpow2(T, S);
+    return S;
   }
 };
 
@@ -93,7 +93,6 @@ struct xorshift_generator {
     this->state = x;
     return x;
   }
-
 };
 
 template <uint32_t num_sites>
@@ -129,6 +128,7 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   }
 
   DoNotOptimize(storage);
+  DoNotOptimize(gen.state);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
@@ -140,10 +140,12 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    if (k != num_sites) storage[k] = static_cast<bool>(gen() & 1);
+    if (k != num_sites)
+      storage[k] = static_cast<bool>(gen() & 1);
   }
 
   DoNotOptimize(storage);
+  DoNotOptimize(gen.state);
   return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
@@ -190,10 +192,8 @@ void benchmark_assign_storage_site_(OutputIt out) {
       const auto env_var = std::getenv("DSTREAM_OBFUSCATE_UNSET_ENV_VAR") ?: "";
       // prevent compiler from knowing num_items in advance
       const uint32_t obfuscated_num_items = num_items + std::strlen(env_var);
-      return time_assign_storage_site<algo, num_sites>(
-        replicate++,
-        obfuscated_num_items
-      );
+      return time_assign_storage_site<algo, num_sites>(replicate++,
+                                                       obfuscated_num_items);
     });
   }
 }
@@ -213,8 +213,8 @@ int main() {
   using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
-  benchmark_assign_storage_site<control_algo>(inserter);
-  benchmark_assign_storage_site<control_modpow2_algo>(inserter);
+  benchmark_assign_storage_site<control_ring_algo>(inserter);
+  benchmark_assign_storage_site<control_throwaway_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
