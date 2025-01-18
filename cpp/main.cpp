@@ -216,11 +216,15 @@ int main() {
   using std::chrono::high_resolution_clock;
 
   using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
+  using dstream_stretched_algo = downstream::dstream::stretched_algo_<uint32_t>;
+  using dstream_tilted_algo = downstream::dstream::tilted_algo_<uint32_t>;
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
   benchmark_assign_storage_site<control_ring_algo>(inserter);
   benchmark_assign_storage_site<control_throwaway_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
+  benchmark_assign_storage_site<dstream_stretched_algo>(inserter);
+  benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
   std::cout << benchmark_result::make_csv_header();
