@@ -2,3 +2,7 @@
 	path = tex
 	url = https://github.com/mmore500/hypermutator-dynamics.git
 	branch = tex
+[submodule "cpp/downstream"]
+	path = cpp/downstream
+	url = https://github.com/mmore500/downstream.git
+	branch = cpp
