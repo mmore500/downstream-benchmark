@@ -119,6 +119,7 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
         std::next(std::begin(segment_lengths), collapse_idx + 1));
   }
 
+  DoNotOptimize(storage);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
@@ -130,9 +131,10 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    if (k != num_sites) storage[k] = gen() & 1;
+    if (k != num_sites) storage[k] ^= gen() & 1;
   }
 
+  DoNotOptimize(storage);
   return sizeof(storage) + sizeof(uint32_t /* i */);
 }
 
@@ -173,7 +175,7 @@ benchmark_result time_assign_storage_site(const uint32_t replicate,
 template <typename algo, uint32_t num_sites, typename OutputIt>
 void benchmark_assign_storage_site_(OutputIt out) {
   const uint32_t num_replicates = 20;
-  for (const uint32_t num_items : {1'000, 1'000'000}) {
+  for (const uint32_t num_items : {10'000, 100'000, 1'000'000}) {
     uint32_t replicate{};
     std::generate_n(out, num_replicates, [num_items, &replicate]() {
       return time_assign_storage_site<algo, num_sites>(replicate++, num_items);
