@@ -26,16 +26,16 @@ struct benchmark_result {
   uint32_t num_items;
   uint32_t num_sites;
   uint32_t replicate;
-  double duration_ms;
+  double duration_s;
 
   static std::string_view make_csv_header() {
     return ("algo_name, memory_bytes, num_items, "
-            "num_sites, replicate, duration_ms\n");
+            "num_sites, replicate, duration_s\n");
   }
 
   std::string make_csv_row() const {
     return std::format("{}, {}, {}, {}, {}, {}\n", algo_name, memory_bytes,
-                       num_items, num_sites, replicate, duration_ms);
+                       num_items, num_sites, replicate, duration_s);
   }
 };
 
@@ -128,7 +128,7 @@ benchmark_result time_assign_storage_site(const uint32_t replicate,
           .num_items = num_items,
           .num_sites = num_sites,
           .replicate = replicate,
-          .duration_ms =
+          .duration_s =
               duration_cast<std::chrono::duration<double>>(t2 - t1).count()};
 }
 
