@@ -7,6 +7,7 @@
 #include <string_view>
 #include <vector>
 
+#include "downstream/include/downstream/_auxlib/modpow2.hpp"
 #include "downstream/include/downstream/dstream/dstream.hpp"
 
 template <class Tp> inline void DoNotOptimize(Tp const &value) {
@@ -61,6 +62,13 @@ struct control_algo {
   static std::string_view get_algo_name() { return "control_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
     return T % S;
+  }
+};
+
+struct control_modpow2_algo {
+  static std::string_view get_algo_name() { return "control_modpow2_algo"; }
+  static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
+    return downstream::_auxlib::modpow2(T, S);
   }
 };
 
@@ -199,6 +207,7 @@ int main() {
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
   benchmark_assign_storage_site<control_algo>(inserter);
+  benchmark_assign_storage_site<control_modpow2_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
