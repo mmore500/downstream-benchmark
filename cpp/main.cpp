@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ranges>
 #include <string_view>
+#include <vector>
 
 #include "downstream/include/downstream/dstream/dstream.hpp"
 
