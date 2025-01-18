@@ -60,7 +60,7 @@ struct naive_steady_algo {
 struct control_algo {
   static std::string_view get_algo_name() { return "control_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
-    return 0;
+    return T % S;
   }
 };
 
@@ -72,6 +72,21 @@ template <> size_t sizeof_vector(const std::vector<bool> &vec) {
   return sizeof(vec) + (vec.size() + 7) / 8;
 }
 
+// adapted from https://en.wikipedia.org/wiki/Xorshift
+struct xorshift_generator {
+
+  uint32_t state = 0xdeadbeef;
+  uint32_t operator()() {
+    uint32_t x = this->state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    this->state = x;
+    return x;
+  }
+
+};
+
 template <uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_naive_assign_storage_site(const uint32_t num_items) {
@@ -80,8 +95,9 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
 
+  xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const bool data = i & 1;
+    const bool data = gen() & 1;
     storage.push_back(data);
     segment_lengths.push_back(1);
 
@@ -110,9 +126,10 @@ template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
   std::bitset<num_sites> storage;
+  xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    if (k != num_sites) storage[k] = i & 1;
+    if (k != num_sites) storage[k] = gen() & 1;
   }
 
   DoNotOptimize(storage);
