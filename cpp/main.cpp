@@ -93,7 +93,6 @@ struct xorshift_generator {
     this->state = x;
     return x;
   }
-
 };
 
 template <uint32_t num_sites>
@@ -141,7 +140,8 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    if (k != num_sites) storage[k] = static_cast<bool>(gen() & 1);
+    if (k != num_sites)
+      storage[k] = static_cast<bool>(gen() & 1);
   }
 
   DoNotOptimize(storage);
@@ -192,10 +192,8 @@ void benchmark_assign_storage_site_(OutputIt out) {
       const auto env_var = std::getenv("DSTREAM_OBFUSCATE_UNSET_ENV_VAR") ?: "";
       // prevent compiler from knowing num_items in advance
       const uint32_t obfuscated_num_items = num_items + std::strlen(env_var);
-      return time_assign_storage_site<algo, num_sites>(
-        replicate++,
-        obfuscated_num_items
-      );
+      return time_assign_storage_site<algo, num_sites>(replicate++,
+                                                       obfuscated_num_items);
     });
   }
 }
