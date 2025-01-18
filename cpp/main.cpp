@@ -131,7 +131,7 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    if (k != num_sites) storage[k] ^= gen() & 1;
+    if (k != num_sites) storage[k] = static_cast<bool>(gen() & 1);
   }
 
   DoNotOptimize(storage);
