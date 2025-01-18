@@ -57,6 +57,13 @@ struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
 };
 
+struct control_algo {
+  static std::string_view get_algo_name() { return "control_algo"; }
+  static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
+    return 0;
+  }
+};
+
 template <typename T> size_t sizeof_vector(const std::vector<T> &vec) {
   return sizeof(vec) + vec.size() * sizeof(T);
 }
@@ -172,6 +179,7 @@ int main() {
   using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
   std::vector<benchmark_result> results;
   auto inserter = std::back_inserter(results);
+  benchmark_assign_storage_site<control_algo>(inserter);
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
 
