@@ -1,6 +1,7 @@
 backstrip==0.2.4
 black==22.10.0
 Deprecated==1.2.13
+downstream==1.6.2
 interval_search==0.5.2
 IPython==7.31.1
 isort==5.12.0
