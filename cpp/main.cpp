@@ -334,7 +334,7 @@ int main() {
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<dstream_stretched_algo>(inserter);
   benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
-  benchmark_assign_storage_site<naive_steady_algo>(inserter);
+  // benchmark_assign_storage_site<naive_steady_algo>(inserter);
   benchmark_assign_storage_site<zhao_steady_algo>(inserter);
   benchmark_assign_storage_site<zhao_tilted_algo>(inserter);
 
