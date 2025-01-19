@@ -226,11 +226,6 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
         std::next(std::begin(segment_lengths), collapse_idx + 1));
   }
 
-  for (const auto seg : segment_lengths) {
-    std::cout << seg << " ";
-  }
-  std::cout << std::endl;
-
   DoNotOptimize(storage);
   DoNotOptimize(gen.state);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
@@ -339,7 +334,7 @@ int main() {
   benchmark_assign_storage_site<dstream_steady_algo>(inserter);
   benchmark_assign_storage_site<dstream_stretched_algo>(inserter);
   benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
-  benchmark_assign_storage_site<naive_steady_algo>(inserter);
+  // benchmark_assign_storage_site<naive_steady_algo>(inserter);
   benchmark_assign_storage_site<zhao_steady_algo>(inserter);
   benchmark_assign_storage_site<zhao_tilted_algo>(inserter);
 
