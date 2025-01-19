@@ -64,6 +64,10 @@ struct zhao_steady_algo {
   static std::string_view get_algo_name() { return "zhao_steady_algo"; }
 };
 
+struct zhao_tilted_algo {
+  static std::string_view get_algo_name() { return "zhao_tilted_algo"; }
+};
+
 struct control_ring_algo {
   static std::string_view get_algo_name() { return "control_ring_algo"; }
   static uint32_t _assign_storage_site(const uint32_t S, const uint32_t T) {
@@ -186,6 +190,52 @@ execute_zhao_assign_storage_site(const uint32_t num_items) {
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
+template <uint32_t num_sites>
+__attribute__((hot)) uint32_t
+execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
+  std::vector<uint32_t> segment_lengths;
+  std::vector<bool> storage;
+  segment_lengths.reserve(num_sites);
+  storage.reserve(num_sites);
+  DoNotOptimize(storage);
+
+  xorshift_generator gen{};
+  for (uint32_t i = 0; i < num_items; ++i) {
+    const bool data = gen() & 1;
+
+    storage.push_back(data);
+    segment_lengths.push_back(1);
+
+    const auto indexRange = std::ranges::reverse_view(std::views::iota(
+      size_t{}, static_cast<size_t>(storage.size() - 1)
+    ));
+    const auto collapse_iter = std::ranges::find_if(
+      indexRange,
+      [&](std::size_t i) {
+        return segment_lengths[i] == segment_lengths[i + 1];
+      }
+    );
+
+    if (collapse_iter == std::end(indexRange)) continue;
+
+    const auto collapse_idx = *collapse_iter;
+
+    segment_lengths[collapse_idx] += segment_lengths[collapse_idx + 1];
+    storage.erase(std::next(std::begin(storage), collapse_idx + 1));
+    segment_lengths.erase(
+        std::next(std::begin(segment_lengths), collapse_idx + 1));
+  }
+
+  for (const auto seg : segment_lengths) {
+    std::cout << seg << " ";
+  }
+  std::cout << std::endl;
+
+  DoNotOptimize(storage);
+  DoNotOptimize(gen.state);
+  return sizeof_vector(storage) + sizeof_vector(segment_lengths);
+}
+
 template <typename dstream_algo, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
@@ -222,6 +272,13 @@ template <uint32_t num_sites>
 struct execute_assign_storage_site<num_sites, zhao_steady_algo> {
   static uint32_t operator()(const uint32_t num_items) {
     return execute_zhao_assign_storage_site<num_sites>(num_items);
+  }
+};
+
+template <uint32_t num_sites>
+struct execute_assign_storage_site<num_sites, zhao_tilted_algo> {
+  static uint32_t operator()(const uint32_t num_items) {
+    return execute_zhao_tilted_assign_storage_site<num_sites>(num_items);
   }
 };
 
@@ -284,6 +341,7 @@ int main() {
   benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
   benchmark_assign_storage_site<naive_steady_algo>(inserter);
   benchmark_assign_storage_site<zhao_steady_algo>(inserter);
+  benchmark_assign_storage_site<zhao_tilted_algo>(inserter);
 
   std::cout << benchmark_result::make_csv_header();
   for (const auto &result : results)
