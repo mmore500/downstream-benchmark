@@ -153,7 +153,7 @@ execute_zhao_assign_storage_site(const uint32_t num_items) {
   for (uint32_t i = 0; i < num_items; ++i) {
     const bool data = gen() & 1;
 
-    if (storage.size() <= num_sites) {
+    if (storage.size() < num_sites) {
       storage.push_back(data);
       segment_lengths.push_back(1);
       continue;
