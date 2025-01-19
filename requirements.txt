@@ -43,6 +43,8 @@ deprecated==1.2.13
     # via -r requirements.in
 distutils-strtobool==0.1.0
     # via teeplot
+downstream==1.6.2
+    # via -r requirements.in
 exceptiongroup==1.2.2
     # via pytest
 execnet==2.1.1
@@ -81,6 +83,8 @@ jinja2==3.0.3
     # via
     #   -r requirements.in
     #   nbconvert
+joinem==0.9.2
+    # via downstream
 jsonschema==4.23.0
     # via nbformat
 jsonschema-specifications==2024.10.1
@@ -104,6 +108,8 @@ keyname==0.6.0
     #   teeplot
 kiwisolver==1.4.8
     # via matplotlib
+lazy-loader==0.4
+    # via downstream
 markupsafe==3.0.2
     # via
     #   jinja2
@@ -151,6 +157,7 @@ numpy==2.1.2
     #   adjusttext
     #   backstrip
     #   contourpy
+    #   downstream
     #   matplotlib
     #   outset
     #   pandas
@@ -162,12 +169,14 @@ opytional==0.1.0
     # via
     #   -r requirements.in
     #   backstrip
+    #   downstream
     #   outset
 outset==0.1.9
     # via -r requirements.in
 packaging==24.2
     # via
     #   ipykernel
+    #   lazy-loader
     #   matplotlib
     #   nbconvert
     #   pytest
@@ -200,7 +209,10 @@ platformdirs==4.3.6
 pluggy==1.5.0
     # via pytest
 polars==1.9.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   downstream
+    #   joinem
 prompt-toolkit==3.0.48
     # via ipython
 psutil==6.1.1
@@ -291,7 +303,9 @@ tornado==6.4.2
     #   ipykernel
     #   jupyter-client
 tqdm==4.64.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   joinem
 traitlets==5.14.3
     # via
     #   comm
