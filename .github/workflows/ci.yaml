@@ -202,5 +202,5 @@ jobs:
       #     make -C cpp run-debug
       - name: Run
         run: |
-          make -C cpp clean
-          make -C cpp run-release
+          make -C cpp/native clean
+          make -C cpp/native run-release
