@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 
 # Format C++ files
 echo "Formatting C++ files..."
-find "main.cpp" | while read -r file; do
+find "native/main.cpp" "pico/main.cpp" "main_impl.hpp" | while read -r file; do
     clang-format -style=file -i "$file"
 done
 
