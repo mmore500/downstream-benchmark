@@ -1,3 +1,3 @@
-#include "./main_impl.hpp"
+#include "../main_impl.hpp"
 
 int main() { return dispatch(); }
