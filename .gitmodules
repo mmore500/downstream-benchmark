@@ -6,3 +6,6 @@
 	path = cpp/downstream
 	url = https://github.com/mmore500/downstream.git
 	branch = cpp
+[submodule "cpp/pico-sdk"]
+	path = cpp/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
