@@ -208,17 +208,15 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
     storage.push_back(data);
     segment_lengths.push_back(1);
 
-    const auto indexRange = std::ranges::reverse_view(std::views::iota(
-      size_t{}, static_cast<size_t>(storage.size() - 1)
-    ));
-    const auto collapse_iter = std::ranges::find_if(
-      indexRange,
-      [&](std::size_t i) {
-        return segment_lengths[i] == segment_lengths[i + 1];
-      }
-    );
+    const auto indexRange = std::ranges::reverse_view(
+        std::views::iota(size_t{}, static_cast<size_t>(storage.size() - 1)));
+    const auto collapse_iter =
+        std::ranges::find_if(indexRange, [&](std::size_t i) {
+          return segment_lengths[i] == segment_lengths[i + 1];
+        });
 
-    if (collapse_iter == std::end(indexRange)) continue;
+    if (collapse_iter == std::end(indexRange))
+      continue;
 
     const auto collapse_idx = *collapse_iter;
 
