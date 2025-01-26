@@ -243,7 +243,7 @@ records = []
 
 def measure_execution_time(func, S: int, T: np.ndarray):
     t1 = (time.perf_counter(), time.process_time())
-    result = func(S, T, parallel=False)  
+    result = func(S, T, parallel=False)
     t2 = (time.perf_counter(), time.process_time())
 
     realTime = t2[0] - t1[0]  # no rounding
