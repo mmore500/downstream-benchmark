@@ -262,19 +262,19 @@ execute_dstream_assign_storage_site(const uint32_t num_items) {
   using storage_t =
       std::conditional_t<std::is_same_v<dtype, bool>, std::bitset<num_sites>,
                          std::array<dtype, num_sites>>;
-  storage_t storage{};
-  DoNotOptimize(storage);
+  std::optional<storage_t> storage; // bypass zero-initialization
+  DoNotOptimize(*storage);
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
     const auto data = downcast_value<dtype>(gen());
     if (k != num_sites)
-      storage[k] = data;
+      (*storage)[k] = data;
   }
 
-  DoNotOptimize(storage);
+  DoNotOptimize(*storage);
   DoNotOptimize(gen.state);
-  return sizeof(storage) + sizeof(uint32_t /* i */);
+  return sizeof(storage_t) + sizeof(uint32_t /* i */);
 }
 
 template <typename dtype, uint32_t num_sites, typename algo>
