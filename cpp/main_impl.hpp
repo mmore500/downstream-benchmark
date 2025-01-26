@@ -7,8 +7,10 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <ranges>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 #include "./downstream/include/downstream/_auxlib/modpow2.hpp"
@@ -39,6 +41,7 @@ constexpr std::string_view get_compiler_name() {
 
 struct benchmark_result {
   std::string_view algo_name;
+  std::string_view data_type;
   uint32_t memory_bytes;
   uint32_t num_items;
   uint32_t num_sites;
@@ -46,17 +49,25 @@ struct benchmark_result {
   double duration_s;
 
   static std::string_view make_csv_header() {
-    return ("algo_name,compiler,memory_bytes,num_items,"
+    return ("algo_name,data_type,compiler,memory_bytes,num_items,"
             "num_sites,replicate,duration_s\n");
   }
 
   std::string make_csv_row() const {
     constexpr std::string_view compiler_name = get_compiler_name();
-    return std::format("{},{},{},{},{},{},{}\n", algo_name, compiler_name,
-                       memory_bytes, num_items, num_sites, replicate,
-                       duration_s);
+    return std::format("{},{},{},{},{},{},{},{}\n", algo_name, data_type,
+                       compiler_name, memory_bytes, num_items, num_sites,
+                       replicate, duration_s);
   }
+
 };
+
+namespace std {
+  std::ostream& operator<<(std::ostream &os, const benchmark_result &result) {
+    os << result.make_csv_row();
+    return os;
+  }
+}
 
 struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
@@ -92,6 +103,28 @@ template <> size_t sizeof_vector(const std::vector<bool> &vec) {
   return sizeof(vec) + (vec.size() + 7) / 8;
 }
 
+template <typename dtype> dtype downcast_value(const uint32_t value) {
+  if constexpr (std::is_same_v<dtype, bool>) {
+    return static_cast<bool>(value & 1);
+  } else
+    return static_cast<dtype>(value);
+}
+
+template <typename dtype> std::string_view name_value() {
+  if constexpr (std::is_same_v<dtype, bool>) {
+    return "bit";
+  } else if constexpr (std::is_same_v<dtype, uint8_t>) {
+    return "byte";
+  } else if constexpr (std::is_same_v<dtype, uint16_t>) {
+    return "word";
+  } else if constexpr (std::is_same_v<dtype, uint32_t>) {
+    return "double word";
+  } else if constexpr (std::is_same_v<dtype, uint64_t>) {
+    return "quad word";
+  } else
+    static_assert(false);
+}
+
 // adapted from https://en.wikipedia.org/wiki/Xorshift
 struct xorshift_generator {
 
@@ -109,18 +142,18 @@ struct xorshift_generator {
   }
 };
 
-template <uint32_t num_sites>
+template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_naive_assign_storage_site(const uint32_t num_items) {
   std::vector<uint32_t> segment_lengths;
-  std::vector<bool> storage;
+  std::vector<dtype> storage;
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
   DoNotOptimize(storage);
 
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const bool data = gen() & 1;
+    const auto data = downcast_value<dtype>(gen());
     storage.push_back(data);
     segment_lengths.push_back(1);
 
@@ -146,18 +179,18 @@ execute_naive_assign_storage_site(const uint32_t num_items) {
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
-template <uint32_t num_sites>
+template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_zhao_assign_storage_site(const uint32_t num_items) {
   std::vector<uint32_t> segment_lengths;
-  std::vector<bool> storage;
+  std::vector<dtype> storage;
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
   DoNotOptimize(storage);
 
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const bool data = gen() & 1;
+    const auto data = downcast_value<dtype>(gen());
 
     if (storage.size() < num_sites) {
       storage.push_back(data);
@@ -192,18 +225,18 @@ execute_zhao_assign_storage_site(const uint32_t num_items) {
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
-template <uint32_t num_sites>
+template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
   std::vector<uint32_t> segment_lengths;
-  std::vector<bool> storage;
+  std::vector<dtype> storage;
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
   DoNotOptimize(storage);
 
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const bool data = gen() & 1;
+    const auto data = downcast_value<dtype>(gen());
 
     storage.push_back(data);
     segment_lengths.push_back(1);
@@ -231,64 +264,70 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
 
-template <typename dstream_algo, uint32_t num_sites>
+template <typename dstream_algo, typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_dstream_assign_storage_site(const uint32_t num_items) {
-  std::bitset<num_sites> storage;
-  DoNotOptimize(storage);
+
+  using storage_t =
+      std::conditional_t<std::is_same_v<dtype, bool>, std::bitset<num_sites>,
+                         std::array<dtype, num_sites>>;
+  std::optional<storage_t> storage; // bypass zero-initialization
+  DoNotOptimize(*storage);
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
     const auto k = dstream_algo::_assign_storage_site(num_sites, i);
-    const bool data = gen() & 1;
+    const auto data = downcast_value<dtype>(gen());
     if (k != num_sites)
-      storage[k] = data;
+      (*storage)[k] = data;
   }
 
-  DoNotOptimize(storage);
+  DoNotOptimize(*storage);
   DoNotOptimize(gen.state);
-  return sizeof(storage) + sizeof(uint32_t /* i */);
+  return sizeof(storage_t) + sizeof(uint32_t /* i */);
 }
 
-template <uint32_t num_sites, typename algo>
+template <typename dtype, uint32_t num_sites, typename algo>
 struct execute_assign_storage_site {
   static uint32_t operator()(const uint32_t num_items) {
-    return execute_dstream_assign_storage_site<algo, num_sites>(num_items);
+    return execute_dstream_assign_storage_site<algo, dtype, num_sites>(
+        num_items);
   }
 };
 
-template <uint32_t num_sites>
-struct execute_assign_storage_site<num_sites, naive_steady_algo> {
+template <typename dtype, uint32_t num_sites>
+struct execute_assign_storage_site<dtype, num_sites, naive_steady_algo> {
   static uint32_t operator()(const uint32_t num_items) {
-    return execute_naive_assign_storage_site<num_sites>(num_items);
+    return execute_naive_assign_storage_site<dtype, num_sites>(num_items);
   }
 };
 
-template <uint32_t num_sites>
-struct execute_assign_storage_site<num_sites, zhao_steady_algo> {
+template <typename dtype, uint32_t num_sites>
+struct execute_assign_storage_site<dtype, num_sites, zhao_steady_algo> {
   static uint32_t operator()(const uint32_t num_items) {
-    return execute_zhao_assign_storage_site<num_sites>(num_items);
+    return execute_zhao_assign_storage_site<dtype, num_sites>(num_items);
   }
 };
 
-template <uint32_t num_sites>
-struct execute_assign_storage_site<num_sites, zhao_tilted_algo> {
+template <typename dtype, uint32_t num_sites>
+struct execute_assign_storage_site<dtype, num_sites, zhao_tilted_algo> {
   static uint32_t operator()(const uint32_t num_items) {
-    return execute_zhao_tilted_assign_storage_site<num_sites>(num_items);
+    return execute_zhao_tilted_assign_storage_site<dtype, num_sites>(num_items);
   }
 };
 
-template <typename algo, uint32_t num_sites>
+template <typename algo, typename dtype, uint32_t num_sites>
 benchmark_result time_assign_storage_site(const uint32_t replicate,
                                           const uint32_t num_items) {
   using std::chrono::duration_cast;
   using std::chrono::high_resolution_clock;
 
   const auto t1 = high_resolution_clock::now();
-  using executor = execute_assign_storage_site<num_sites, algo>;
+  using executor = execute_assign_storage_site<dtype, num_sites, algo>;
   const auto memory_bytes = executor::operator()(num_items);
   const auto t2 = high_resolution_clock::now();
 
   return {.algo_name = algo::get_algo_name(),
+          .data_type = name_value<dtype>(),
           .memory_bytes = memory_bytes,
           .num_items = num_items,
           .num_sites = num_sites,
@@ -297,7 +336,7 @@ benchmark_result time_assign_storage_site(const uint32_t replicate,
               duration_cast<std::chrono::duration<double>>(t2 - t1).count()};
 }
 
-template <typename algo, uint32_t num_sites, typename OutputIt>
+template <typename algo, typename dtype, uint32_t num_sites, typename OutputIt>
 void benchmark_assign_storage_site_(OutputIt out) {
   const uint32_t num_replicates = 20;
   for (const uint32_t num_items : {10'000, 100'000, 1'000'000}) {
@@ -306,18 +345,40 @@ void benchmark_assign_storage_site_(OutputIt out) {
       const auto env_var = std::getenv("DSTREAM_OBFUSCATE_UNSET_ENV_VAR") ?: "";
       // prevent compiler from knowing num_items in advance
       const uint32_t obfuscated_num_items = num_items + std::strlen(env_var);
-      return time_assign_storage_site<algo, num_sites>(replicate++,
-                                                       obfuscated_num_items);
+      return time_assign_storage_site<algo, dtype, num_sites>(
+          replicate++, obfuscated_num_items);
     });
   }
 }
 
 template <typename algo, typename OutputIt>
 void benchmark_assign_storage_site(OutputIt out) {
-  benchmark_assign_storage_site_<algo, 64>(out);
-  benchmark_assign_storage_site_<algo, 256>(out);
-  benchmark_assign_storage_site_<algo, 1024>(out);
-  benchmark_assign_storage_site_<algo, 4096>(out);
+  #ifndef __arm__  // skip on pico, to avoid out of memory error
+  benchmark_assign_storage_site_<algo, uint64_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 64>(out);
+  #endif
+
+  benchmark_assign_storage_site_<algo, uint32_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, uint16_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, uint8_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, bool, 4096>(out);
+  benchmark_assign_storage_site_<algo, bool, 1024>(out);
+  benchmark_assign_storage_site_<algo, bool, 256>(out);
+  benchmark_assign_storage_site_<algo, bool, 64>(out);
 }
 
 int dispatch() {
@@ -325,19 +386,15 @@ int dispatch() {
   using dstream_stretched_algo = downstream::dstream::stretched_algo_<uint32_t>;
   using dstream_tilted_algo = downstream::dstream::tilted_algo_<uint32_t>;
 
-  std::vector<benchmark_result> results;
-  auto inserter = std::back_inserter(results);
-  benchmark_assign_storage_site<control_ring_algo>(inserter);
-  benchmark_assign_storage_site<control_throwaway_algo>(inserter);
-  benchmark_assign_storage_site<dstream_steady_algo>(inserter);
-  benchmark_assign_storage_site<dstream_stretched_algo>(inserter);
-  benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
-  // benchmark_assign_storage_site<naive_steady_algo>(inserter);
-  benchmark_assign_storage_site<zhao_steady_algo>(inserter);
-  benchmark_assign_storage_site<zhao_tilted_algo>(inserter);
-
   std::cout << benchmark_result::make_csv_header();
-  for (const auto &result : results)
-    std::cout << result.make_csv_row();
+  auto out = std::ostream_iterator<benchmark_result>(std::cout);
+  benchmark_assign_storage_site<control_ring_algo>(out);
+  benchmark_assign_storage_site<control_throwaway_algo>(out);
+  benchmark_assign_storage_site<dstream_steady_algo>(out);
+  benchmark_assign_storage_site<dstream_stretched_algo>(out);
+  benchmark_assign_storage_site<dstream_tilted_algo>(out);
+  // benchmark_assign_storage_site<naive_steady_algo>(out);
+  benchmark_assign_storage_site<zhao_steady_algo>(out);
+  benchmark_assign_storage_site<zhao_tilted_algo>(out);
   return 0;
 }
