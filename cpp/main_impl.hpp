@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <ranges>
 #include <string_view>
 #include <type_traits>
@@ -58,7 +59,15 @@ struct benchmark_result {
                        compiler_name, memory_bytes, num_items, num_sites,
                        replicate, duration_s);
   }
+
 };
+
+namespace std {
+  std::ostream& operator<<(std::ostream &os, const benchmark_result &result) {
+    os << result.make_csv_row();
+    return os;
+  }
+}
 
 struct naive_steady_algo {
   static std::string_view get_algo_name() { return "naive_steady_algo"; }
@@ -377,19 +386,15 @@ int dispatch() {
   using dstream_stretched_algo = downstream::dstream::stretched_algo_<uint32_t>;
   using dstream_tilted_algo = downstream::dstream::tilted_algo_<uint32_t>;
 
-  std::vector<benchmark_result> results;
-  auto inserter = std::back_inserter(results);
-  benchmark_assign_storage_site<control_ring_algo>(inserter);
-  benchmark_assign_storage_site<control_throwaway_algo>(inserter);
-  benchmark_assign_storage_site<dstream_steady_algo>(inserter);
-  benchmark_assign_storage_site<dstream_stretched_algo>(inserter);
-  benchmark_assign_storage_site<dstream_tilted_algo>(inserter);
-  // benchmark_assign_storage_site<naive_steady_algo>(inserter);
-  benchmark_assign_storage_site<zhao_steady_algo>(inserter);
-  benchmark_assign_storage_site<zhao_tilted_algo>(inserter);
-
   std::cout << benchmark_result::make_csv_header();
-  for (const auto &result : results)
-    std::cout << result.make_csv_row();
+  auto out = std::ostream_iterator<benchmark_result>(std::cout);
+  benchmark_assign_storage_site<control_ring_algo>(out);
+  benchmark_assign_storage_site<control_throwaway_algo>(out);
+  benchmark_assign_storage_site<dstream_steady_algo>(out);
+  benchmark_assign_storage_site<dstream_stretched_algo>(out);
+  benchmark_assign_storage_site<dstream_tilted_algo>(out);
+  // benchmark_assign_storage_site<naive_steady_algo>(out);
+  benchmark_assign_storage_site<zhao_steady_algo>(out);
+  benchmark_assign_storage_site<zhao_tilted_algo>(out);
   return 0;
 }
