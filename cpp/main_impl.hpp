@@ -344,26 +344,32 @@ void benchmark_assign_storage_site_(OutputIt out) {
 
 template <typename algo, typename OutputIt>
 void benchmark_assign_storage_site(OutputIt out) {
-  benchmark_assign_storage_site_<algo, bool, 64>(out);
-  benchmark_assign_storage_site_<algo, bool, 256>(out);
-  benchmark_assign_storage_site_<algo, bool, 1024>(out);
-  benchmark_assign_storage_site_<algo, bool, 4096>(out);
-  benchmark_assign_storage_site_<algo, uint8_t, 64>(out);
-  benchmark_assign_storage_site_<algo, uint8_t, 256>(out);
-  benchmark_assign_storage_site_<algo, uint8_t, 1024>(out);
-  benchmark_assign_storage_site_<algo, uint8_t, 4096>(out);
-  benchmark_assign_storage_site_<algo, uint16_t, 64>(out);
-  benchmark_assign_storage_site_<algo, uint16_t, 256>(out);
-  benchmark_assign_storage_site_<algo, uint16_t, 1024>(out);
-  benchmark_assign_storage_site_<algo, uint16_t, 4096>(out);
-  benchmark_assign_storage_site_<algo, uint32_t, 64>(out);
-  benchmark_assign_storage_site_<algo, uint32_t, 256>(out);
-  benchmark_assign_storage_site_<algo, uint32_t, 1024>(out);
-  benchmark_assign_storage_site_<algo, uint32_t, 4096>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 64>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 256>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 1024>(out);
+  #ifndef __arm__  // skip on pico, to avoid out of memory error
   benchmark_assign_storage_site_<algo, uint64_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint64_t, 64>(out);
+  #endif
+
+  benchmark_assign_storage_site_<algo, uint32_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint32_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, uint16_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint16_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, uint8_t, 4096>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 1024>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 256>(out);
+  benchmark_assign_storage_site_<algo, uint8_t, 64>(out);
+
+  benchmark_assign_storage_site_<algo, bool, 4096>(out);
+  benchmark_assign_storage_site_<algo, bool, 1024>(out);
+  benchmark_assign_storage_site_<algo, bool, 256>(out);
+  benchmark_assign_storage_site_<algo, bool, 64>(out);
 }
 
 int dispatch() {
