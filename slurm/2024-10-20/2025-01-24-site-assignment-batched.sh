@@ -270,6 +270,7 @@ for algo_name, algo_func in algorithms:
             measure_execution_time(algo_func, S, T_32)
 
 df = pd.DataFrame.from_records(records)
+df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
 
 
 print(df.describe())
