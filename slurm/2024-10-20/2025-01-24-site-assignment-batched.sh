@@ -201,7 +201,7 @@ cat > "${SBATCH_FILE}" << EOF
 #!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=64G
+#SBATCH --mem=8G
 #SBATCH --time=4:00:00
 #SBATCH --output="/mnt/home/%u/joblog/%j"
 #SBATCH --mail-user=joeywagner024@gmail.com
@@ -230,18 +230,17 @@ python3 -m venv env
 source env/bin/activate
 python3 -m pip install -r requirements.txt
 
+
 python3 << EOF_
 
 import time
 import numpy as np
 import pandas as pd
-import numpy as np
 from downstream import dstream
 
 
-records = []
 
-def measure_execution_time(func, S: int, T: np.ndarray):
+def measure_execution_time(func, S: int, T: np.ndarray, records):
     t1 = (time.perf_counter(), time.process_time())
     result = func(S, T, parallel=False)
     t2 = (time.perf_counter(), time.process_time())
@@ -249,29 +248,38 @@ def measure_execution_time(func, S: int, T: np.ndarray):
     realTime = t2[0] - t1[0]  # no rounding
     cpuTime = t2[1] - t1[1]   # no rounding
 
-    records.append({"Call To Function": f"{func.__name__}(S={S}, Tsize={len(T)})", "Selected Site(s)": result.shape, "Real Execution Time": realTime, "CPU Execution Time": cpuTime})
+    records.append({"Call To Function": f"{func.__name__}(S={S}, Tsize={len(T)})", "Selected Site(s)": result.shape, "Real Execution Time": realTime, "CPU Execution Time": cpuTime, "Result Size": result.size})
 
 # batched lookup algorithms
 algorithms = [("steady", dstream.steady_algo.lookup_ingest_times_batched), ("stretched", dstream.stretched_algo.lookup_ingest_times_batched), ("tilted", dstream.tilted_algo.lookup_ingest_times_batched),]
 
 surface_sizes = [64, 256, 1024]
+def do_timings():
 
-np.random.seed(0)
+    records = []
 
-for algo_name, algo_func in algorithms:
-    for S in surface_sizes:
-        if S == 256:
-            # S=256, test T in [256, 2**16] only
-            T_16 = np.random.randint(S, 2**16, size=256, dtype=np.int64)
-            measure_execution_time(algo_func, S, T_16)
-        else:
-            # S=64 or S=1024, test T in [S, 2**32]
-            T_32 = np.random.randint(S, 2**32, size=256, dtype=np.int64)
-            measure_execution_time(algo_func, S, T_32)
+    np.random.seed(0)
 
-df = pd.DataFrame.from_records(records)
-df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
 
+    for algo_name, algo_func in algorithms:
+        for S in surface_sizes:
+            # if S == 256:
+            #     # S=256, test T in [256, 2**16] only
+            #     T_16 = np.random.randint(S, 2**16, size=256, dtype=np.int64)
+            #     measure_execution_time(algo_func, S, T_16)
+            # else:
+            #     # S=64 or S=1024, test T in [S, 2**32]
+            #     T_32 = np.random.randint(S, 2**32, size=256, dtype=np.int64)
+            #     measure_execution_time(algo_func, S, T_32)
+            T_32 = np.random.randint(S, 2**32, size=1048576, dtype=np.int64)
+            measure_execution_time(algo_func, S, T_32, records)
+
+    df = pd.DataFrame.from_records(records)
+    df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
+    return df
+
+do_timings() # warm up cache
+df = do_timings()
 
 print(df.describe())
 print(df.head())
@@ -314,7 +322,7 @@ cat > "${SBATCH_FILE}" << EOF
 #!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=16G
+#SBATCH --mem=8G
 #SBATCH --time=4:00:00
 #SBATCH --output="/mnt/home/%u/joblog/%j"
 #SBATCH --mail-user=joeywagner024@gmail.com
