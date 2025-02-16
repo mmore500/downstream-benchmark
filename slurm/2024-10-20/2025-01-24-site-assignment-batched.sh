@@ -203,6 +203,7 @@ cat > "${SBATCH_FILE}" << EOF
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=64G
 #SBATCH --time=4:00:00
+#SBATCH --nodelist=amr-[000-101]
 #SBATCH --output="/mnt/home/%u/joblog/%j"
 #SBATCH --mail-user=joeywagner024@gmail.com
 #SBATCH --mail-type=FAIL,TIME_LIMIT
