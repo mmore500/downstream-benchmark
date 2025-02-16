@@ -241,13 +241,16 @@ from downstream import dstream
 
 
 
+def no_op(S, T, parallel=False):
+    return np.empty(T.shape, dtype=np.int64)
+
 def measure_execution_time(func, S: int, T: np.ndarray, T_limit: int, records):
     t1 = (time.perf_counter(), time.process_time())
     result = func(S, T, parallel=False)
     t2 = (time.perf_counter(), time.process_time())
 
-    realTime = t2[0] - t1[0]  # no rounding
-    cpuTime = t2[1] - t1[1]   # no rounding
+    realTime = t2[0] - t1[0]
+    cpuTime = t2[1] - t1[1]
 
     records.append({
         "Algorithm": func.__name__,
@@ -260,35 +263,30 @@ def measure_execution_time(func, S: int, T: np.ndarray, T_limit: int, records):
         "Result Size": result.size
     })
 
-# batched lookup algorithms
 algorithms = [
     ("steady", dstream.steady_algo.lookup_ingest_times_batched),
     ("stretched", dstream.stretched_algo.lookup_ingest_times_batched),
     ("tilted", dstream.tilted_algo.lookup_ingest_times_batched),
+    ("no-op", no_op),
 ]
 
 def do_timings():
     records = []
     np.random.seed(0)
-    S = 256  # testing only for S=256
-    T_size = 256  # choose the number of T values you want to test
-
+    S = 256
+    T_size = 1048576
     for algo_name, algo_func in algorithms:
-        # Test with T values up to 2**16
         T_16 = np.random.randint(S, 2**16, size=T_size, dtype=np.int64)
         measure_execution_time(algo_func, S, T_16, 2**16, records)
-
-        # Test with T values up to 2**32
         T_32 = np.random.randint(S, 2**32, size=T_size, dtype=np.int64)
         measure_execution_time(algo_func, S, T_32, 2**32, records)
-
     df = pd.DataFrame.from_records(records)
-    df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
+    df["SLURM_ARRAY_TASK_ID"] = "${SLURM_ARRAY_TASK_ID:-notid}"
     return df
 
-# Warm up cache
 do_timings()
 df = do_timings()
+
 
 print(df.describe())
 print(df.head())
