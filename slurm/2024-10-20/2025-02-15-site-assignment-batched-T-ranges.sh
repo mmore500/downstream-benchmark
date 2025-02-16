@@ -281,7 +281,7 @@ def do_timings():
         T_32 = np.random.randint(S, 2**32, size=T_size, dtype=np.int64)
         measure_execution_time(algo_func, S, T_32, 2**32, records)
     df = pd.DataFrame.from_records(records)
-    df["SLURM_ARRAY_TASK_ID"] = "${SLURM_ARRAY_TASK_ID:-notid}"
+    df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
     return df
 
 do_timings()
