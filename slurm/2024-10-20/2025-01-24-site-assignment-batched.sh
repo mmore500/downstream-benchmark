@@ -244,15 +244,24 @@ from downstream import dstream
 def no_op(S, T, parallel=False):
     return np.empty(T.shape, dtype=np.int64)
 
-def measure_execution_time(func, S: int, T: np.ndarray, records):
+def measure_execution_time(func, S: int, T: np.ndarray, T_limit: int, records):
     t1 = (time.perf_counter(), time.process_time())
     result = func(S, T, parallel=False)
     t2 = (time.perf_counter(), time.process_time())
 
     realTime = t2[0] - t1[0]
     cpuTime = t2[1] - t1[1]
-
-    records.append({"Call To Function": f"{func.__name__}(S={S}, Tsize={len(T)})", "Selected Site(s)": result.shape, "Real Execution Time": realTime, "CPU Execution Time": cpuTime, "Result Size": result.size})
+ 
+    records.append({
+        "Algorithm": func.__name__,
+        "Surface Size (S)": S,
+        "T Upper Bound": T_limit,
+        "T Size": len(T),
+        "Selected Site(s)": result.shape,
+        "Real Execution Time": realTime,
+        "CPU Execution Time": cpuTime,
+        "Result Size": result.size
+    })
 
 algorithms = [
     ("steady", dstream.steady_algo.lookup_ingest_times_batched),
@@ -262,19 +271,22 @@ algorithms = [
 ]
 
 surface_sizes = [64, 256, 1024]
+
 def do_timings():
     records = []
     np.random.seed(0)
     for algo_name, algo_func in algorithms:
         for S in surface_sizes:
-            T_32 = np.random.randint(S, 2**32, size=1048576, dtype=np.int64)
-            measure_execution_time(algo_func, S, T_32, records)
+            T_limit = 2**32
+            T_32 = np.random.randint(S, T_limit, size=1048576, dtype=np.int64)
+            measure_execution_time(algo_func, S, T_32, T_limit, records)
     df = pd.DataFrame.from_records(records)
     df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
     return df
 
 do_timings()
 df = do_timings()
+
 
 
 print(df.describe())
