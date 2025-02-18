@@ -2,7 +2,7 @@
 #    uv pip compile requirements.in
 adjusttext==1.3.0
     # via outset
-attrs==24.3.0
+attrs==25.1.0
     # via
     #   jsonschema
     #   pytest
@@ -15,7 +15,7 @@ backstrip==0.2.4
     # via
     #   -r requirements.in
     #   pecking
-beautifulsoup4==4.12.3
+beautifulsoup4==4.13.3
     # via nbconvert
 black==22.10.0
     # via -r requirements.in
@@ -51,7 +51,7 @@ execnet==2.1.1
     # via pytest-xdist
 fastjsonschema==2.21.1
     # via nbformat
-fonttools==4.55.3
+fonttools==4.56.0
     # via matplotlib
 frozendict==2.4.6
     # via
@@ -59,7 +59,7 @@ frozendict==2.4.6
     #   outset
 hurry-filesize==0.9
     # via nbmetalog
-importlib-metadata==8.5.0
+importlib-metadata==8.6.1
     # via watermark
 iniconfig==2.0.0
     # via pytest
@@ -114,7 +114,7 @@ markupsafe==3.0.2
     # via
     #   jinja2
     #   nbconvert
-matplotlib==3.9.2
+matplotlib==3.10.0
     # via
     #   -r requirements.in
     #   adjusttext
@@ -126,7 +126,7 @@ matplotlib-inline==0.1.7
     # via
     #   ipykernel
     #   ipython
-mistune==3.1.0
+mistune==3.1.1
     # via nbconvert
 more-itertools==9.1.0
     # via
@@ -213,9 +213,9 @@ polars==1.9.0
     #   -r requirements.in
     #   downstream
     #   joinem
-prompt-toolkit==3.0.48
+prompt-toolkit==3.0.50
     # via ipython
-psutil==6.1.1
+psutil==7.0.0
     # via ipykernel
 ptyprocess==0.7.0
     # via pexpect
@@ -244,15 +244,15 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-slugify==8.0.4
     # via teeplot
-pytz==2024.2
+pytz==2025.1
     # via pandas
 pyyaml==6.0.2
     # via nbmetalog
-pyzmq==26.2.0
+pyzmq==26.2.1
     # via
     #   ipykernel
     #   jupyter-client
-referencing==0.36.1
+referencing==0.36.2
     # via
     #   jsonschema
     #   jsonschema-specifications
@@ -319,10 +319,11 @@ traitlets==5.14.3
     #   nbformat
 typing-extensions==4.12.2
     # via
+    #   beautifulsoup4
     #   mistune
     #   referencing
     #   teeplot
-tzdata==2024.2
+tzdata==2025.1
     # via pandas
 uv==0.4.20
     # via -r requirements.in
