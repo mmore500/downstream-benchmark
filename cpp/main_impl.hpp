@@ -382,14 +382,17 @@ void benchmark_assign_storage_site(OutputIt out) {
 }
 
 int dispatch() {
-  using dstream_steady_algo = downstream::dstream::steady_algo_<uint32_t>;
-  using dstream_stretched_algo = downstream::dstream::stretched_algo_<uint32_t>;
-  using dstream_tilted_algo = downstream::dstream::tilted_algo_<uint32_t>;
+  using u32 = std::uint32_t;
+  using dstream_compressing_algo = downstream::dstream::compressing_algo_<u32>;
+  using dstream_steady_algo = downstream::dstream::steady_algo_<u32>;
+  using dstream_stretched_algo = downstream::dstream::stretched_algo_<u32>;
+  using dstream_tilted_algo = downstream::dstream::tilted_algo_<u32>;
 
   std::cout << benchmark_result::make_csv_header();
   auto out = std::ostream_iterator<benchmark_result>(std::cout);
   benchmark_assign_storage_site<control_ring_algo>(out);
   benchmark_assign_storage_site<control_throwaway_algo>(out);
+  benchmark_assign_storage_site<dstream_compressing_algo>(out);
   benchmark_assign_storage_site<dstream_steady_algo>(out);
   benchmark_assign_storage_site<dstream_stretched_algo>(out);
   benchmark_assign_storage_site<dstream_tilted_algo>(out);
