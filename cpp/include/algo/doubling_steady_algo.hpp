@@ -13,38 +13,31 @@
 #include "../../downstream/include/downstream/_auxlib/modpow2.hpp"
 
 #include "../aux/DoNotOptimize.hpp"
+#include "../aux/divpow2.hpp"
 #include "../aux/downcast_value.hpp"
 #include "../aux/sizeof_vector.hpp"
 #include "../aux/xorshift_generator.hpp"
 
-struct gunther_doubling_algo {
-  static std::string_view get_algo_name() { return "gunther_doubling_algo"; }
+struct doubling_steady_algo {
+  static std::string_view get_algo_name() { return "doubling_steady_algo"; }
 };
 
 template <uint32_t S> uint32_t _calc_stride(const uint32_t T) {
   const uint32_t _1{1};
   const uint32_t s = std::bit_width(S) - 1;
-  const uint32_t hv_thresh = std::bit_width(static_cast<uint32_t>(
-    T >> s
-  ));
+  const uint32_t hv_thresh = std::bit_width(static_cast<uint32_t>(T >> s));
   return _1 << hv_thresh;
 }
 
-template <typename Storage>
-void _apply_thinning(Storage &storage) {
+template <typename Storage> void _apply_thinning_steady(Storage &storage) {
   const auto N = storage.size();
-  for (size_t i = 0; i < (N >> 1); ++i) storage[i] = storage[i << 1];
-}
-
-uint32_t _div_pow2(const uint32_t dividend, const uint32_t divisor) {
-  assert(divisor != 0);
-  assert(std::has_single_bit(divisor));
-  return dividend >> (std::bit_width(divisor) - 1);
+  for (size_t i = 0; i < (N >> 1); ++i)
+    storage[i] = storage[i << 1];
 }
 
 template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
-execute_gunther_doubling_assign_storage_site(const uint32_t num_items) {
+execute_doubling_steady_assign_storage_site(const uint32_t num_items) {
   using storage_t =
       std::conditional_t<std::is_same_v<dtype, bool>, std::bitset<num_sites>,
                          std::array<dtype, num_sites>>;
@@ -66,9 +59,9 @@ execute_gunther_doubling_assign_storage_site(const uint32_t num_items) {
     if (!should_keep) [[likely]]
       continue;
 
-    const uint32_t k = _div_pow2(T, stride);
+    const uint32_t k = divpow2(T, stride);
     if (k == num_sites >> 1) [[unlikely]]
-      _apply_thinning(*storage);
+      _apply_thinning_steady(*storage);
 
     assert(num_sites >> 1 <= k && k < num_sites);
     (*storage)[k] = data;
