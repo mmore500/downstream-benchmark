@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 
-#include "../main_impl.hpp"
+#include "../include/benchmark.hpp"
 
 // This example blinks the Pico LED when the BOOTSEL button is pressed.
 //
@@ -72,7 +72,6 @@ int main() {
     sleep_ms(10);
   }
   gpio_put(PICO_DEFAULT_LED_PIN, false);
-  const auto res = dispatch();
-  gpio_put(PICO_DEFAULT_LED_PIN, true);
-  return res;
+  const struct onexit { ~onexit() { gpio_put(PICO_DEFAULT_LED_PIN, true); } } _;
+  return run_benchmark();
 }
