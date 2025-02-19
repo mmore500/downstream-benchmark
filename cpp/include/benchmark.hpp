@@ -13,7 +13,6 @@
 
 #include "../downstream/include/downstream/dstream/dstream.hpp"
 
-#include "./algo/control_ring_algo.hpp"
 #include "./algo/control_throwaway_algo.hpp"
 #include "./algo/doubling_steady_algo.hpp"
 #include "./algo/doubling_tilted_algo.hpp"
@@ -182,6 +181,7 @@ void benchmark_assign_storage_site(OutputIt out) {
 
 int run_benchmark() {
   using u32 = std::uint32_t;
+  using dstream_circular_algo = downstream::dstream::circular_algo_<u32>;
   using dstream_compressing_algo = downstream::dstream::compressing_algo_<u32>;
   using dstream_steady_algo = downstream::dstream::steady_algo_<u32>;
   using dstream_stretched_algo = downstream::dstream::stretched_algo_<u32>;
@@ -189,8 +189,8 @@ int run_benchmark() {
 
   std::cout << benchmark_result::make_csv_header();
   auto out = std::ostream_iterator<benchmark_result>(std::cout);
-  benchmark_assign_storage_site<control_ring_algo>(out);
   benchmark_assign_storage_site<control_throwaway_algo>(out);
+  benchmark_assign_storage_site<dstream_circular_algo>(out);
   benchmark_assign_storage_site<dstream_compressing_algo>(out);
   benchmark_assign_storage_site<dstream_steady_algo>(out);
   benchmark_assign_storage_site<dstream_stretched_algo>(out);
