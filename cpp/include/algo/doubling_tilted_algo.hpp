@@ -13,7 +13,6 @@
 #include "../../downstream/include/downstream/_auxlib/modpow2.hpp"
 
 #include "../aux/DoNotOptimize.hpp"
-#include "../aux/divpow2.hpp"
 #include "../aux/downcast_value.hpp"
 #include "../aux/sizeof_vector.hpp"
 #include "../aux/xorshift_generator.hpp"
@@ -44,11 +43,11 @@ execute_doubling_tilted_assign_storage_site(const uint32_t num_items) {
     (*storage)[T] = downcast_value<dtype>(gen());
 
   // subsequent elements
-  const uint32_t stride = num_sites >> 1;
+  constexpr uint32_t stride = num_sites >> 1;
   for (uint32_t T = num_sites; T < num_items; ++T) {
     const auto data = downcast_value<dtype>(gen());
 
-    const uint32_t k = divpow2(T, stride) + stride;
+    const uint32_t k = downstream::_auxlib::modpow2(T, stride) + stride;
     if (k == stride) [[unlikely]]
       _apply_thinning_tilted(*storage);
 
