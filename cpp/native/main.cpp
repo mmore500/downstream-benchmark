@@ -1,3 +1,3 @@
-#include "../main_impl.hpp"
+#include "../include/benchmark.hpp"
 
-int main() { return dispatch(); }
+int main() { return run_benchmark(); }
