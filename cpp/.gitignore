@@ -2,6 +2,15 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 main
+*.in
+*.bin
+*.cmake
+*.dis
+*.elf
+*.hex
+*.uf2
+*.ld
+pico-sdk
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
