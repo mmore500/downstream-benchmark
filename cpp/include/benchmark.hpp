@@ -16,6 +16,7 @@
 #include "./algo/control_throwaway_algo.hpp"
 #include "./algo/doubling_steady_algo.hpp"
 #include "./algo/doubling_tilted_algo.hpp"
+#include "./algo/dstream_stretched_algo.hpp"
 #include "./algo/zhao_steady_algo.hpp"
 #include "./algo/zhao_tilted_algo.hpp"
 #include "./aux/DoNotOptimize.hpp"
@@ -181,20 +182,21 @@ void benchmark_assign_storage_site(OutputIt out) {
 
 int run_benchmark() {
   using u32 = std::uint32_t;
-  using dstream_circular_algo = downstream::dstream::circular_algo_<u32>;
-  using dstream_compressing_algo = downstream::dstream::compressing_algo_<u32>;
-  using dstream_steady_algo = downstream::dstream::steady_algo_<u32>;
-  using dstream_stretched_algo = downstream::dstream::stretched_algo_<u32>;
-  using dstream_tilted_algo = downstream::dstream::tilted_algo_<u32>;
+  using dstream_circular_algo_ = downstream::dstream::circular_algo_<u32>;
+  using dstream_compressing_algo_ = downstream::dstream::compressing_algo_<u32>;
+  using dstream_steady_algo_ = downstream::dstream::steady_algo_<u32>;
+  using dstream_stretched_algo_ = downstream::dstream::stretched_algo_<u32>;
+  using dstream_tilted_algo_ = downstream::dstream::tilted_algo_<u32>;
 
   std::cout << benchmark_result::make_csv_header();
   auto out = std::ostream_iterator<benchmark_result>(std::cout);
   benchmark_assign_storage_site<control_throwaway_algo>(out);
-  benchmark_assign_storage_site<dstream_circular_algo>(out);
-  benchmark_assign_storage_site<dstream_compressing_algo>(out);
-  benchmark_assign_storage_site<dstream_steady_algo>(out);
   benchmark_assign_storage_site<dstream_stretched_algo>(out);
-  benchmark_assign_storage_site<dstream_tilted_algo>(out);
+  benchmark_assign_storage_site<dstream_circular_algo_>(out);
+  benchmark_assign_storage_site<dstream_compressing_algo_>(out);
+  benchmark_assign_storage_site<dstream_steady_algo_>(out);
+  benchmark_assign_storage_site<dstream_stretched_algo_>(out);
+  benchmark_assign_storage_site<dstream_tilted_algo_>(out);
   benchmark_assign_storage_site<doubling_steady_algo>(out);
   benchmark_assign_storage_site<doubling_tilted_algo>(out);
   benchmark_assign_storage_site<zhao_steady_algo>(out);
