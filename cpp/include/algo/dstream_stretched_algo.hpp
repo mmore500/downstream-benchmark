@@ -25,7 +25,7 @@ template <uint32_t S> struct bs_table {
       // ^^^ Num bunches available to h.v.
     }
   }
-  uint8_t data[32];
+  uint32_t data[32];
 };
 
 template<uint32_t S>
