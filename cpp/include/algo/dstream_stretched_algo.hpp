@@ -14,8 +14,10 @@
 
 template <uint32_t S> struct bs_table {
   constexpr bs_table() : data() {
-    for (uint32_t t = 0; t < 32; ++t) {
-      const uint32_t blt = std::bit_width(t); // Bit length of t
+    constexpr uint32_t s = std::bit_width(S) - 1;
+    for (uint32_t blT = 0; blT < 32; ++blT) {
+      const uint32_t t = blT - std::min(s, blT); // Current epoch
+      const uint32_t blt = std::bit_width(t);    // Bit length of t
 
       bool epsilon_tau = std::bit_floor(t << 1) > t + blt; // Correction factor
       const uint32_t tau = blt - epsilon_tau;              // Current meta-epoch
@@ -47,27 +49,76 @@ inline uint32_t ctz_naive(uint32_t x) {
   return n;
 }
 
-uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
+// https://graphics.stanford.edu/~seander/bithacks.html
+inline uint32_t log2_naive(uint32_t v) {
+  constexpr char LogTable256[256] = {
+#define LT(n) n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n
+      static_cast<char>(-1),
+      0,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      LT(4),
+      LT(5),
+      LT(5),
+      LT(6),
+      LT(6),
+      LT(6),
+      LT(6),
+      LT(7),
+      LT(7),
+      LT(7),
+      LT(7),
+      LT(7),
+      LT(7),
+      LT(7),
+      LT(7)};
 
-  constexpr uint32_t S = 64;
+  uint32_t r;  // r will be lg(v)
+  uint32_t tt; // temporaries
+
+  if ((tt = (v >> 24))) {
+    r = 24 + LogTable256[tt];
+  } else if ((tt = (v >> 16))) {
+    r = 16 + LogTable256[tt];
+  } else if ((tt = (v >> 8))) {
+    r = 8 + LogTable256[tt];
+  } else {
+    r = LogTable256[v];
+  }
+  return r;
+}
+
+template <uint32_t S>
+uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
+
   constexpr uint32_t _1{1};
   namespace aux = downstream::_auxlib;
 
-  constexpr uint32_t s = std::bit_width(S) - _1;
-  const uint32_t blT = std::bit_width(T);
-  const uint32_t t = blT - std::min(s, blT); // Current epoch
-  const uint32_t h = ctz_naive(T + _1);      // Current hanoi value
+  const uint32_t blT = log2_naive(T);
+  const uint32_t h = ctz_naive(T + _1); // Current hanoi value
 
   // DEPENDS ON t, h
   const uint32_t i = T >> (h + _1);
   // ^^^ Hanoi value incidence (i.e., num seen)
 
   constexpr bs_table<S> bs{};
-  const uint32_t b = bs.data[t]; // Num bunches available to hanoi value
+  const uint32_t b = bs.data[blT]; // Num bunches available to hanoi value
 
   // DEPENDS ON t, h
-  if (i >= b) { // If seen more than sites reserved to hanoi value...
-    return S;   // ... discard without storing
+  if (i >= b) [[likely]] { // If seen more than sites reserved to hanoi value...
+    return S;              // ... discard without storing
   }
 
   const uint32_t b_l = i; // Logical bunch index...
@@ -100,10 +151,15 @@ uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
 uint32_t _dstream_stretched_assign_storage_site(const uint32_t S,
                                                 const uint32_t T) {
   if (S == 64)
-    return _dstream_stretched_assign_storage_site64(T);
+    return _dstream_stretched_assign_storage_site_impl<64>(T);
+  else if (S == 256)
+    return _dstream_stretched_assign_storage_site_impl<256>(T);
+  else if (S == 1024)
+    return _dstream_stretched_assign_storage_site_impl<1024>(T);
+  else if (S == 4096)
+    return _dstream_stretched_assign_storage_site_impl<4096>(T);
   else
-    return downstream::dstream::stretched_algo_<uint32_t>::_assign_storage_site(
-        S, T);
+    __builtin_unreachable();
 }
 
 struct dstream_stretched_algo {
