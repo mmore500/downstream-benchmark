@@ -11,8 +11,10 @@
 #include "hardware/sync.h"
 #include "pico/stdlib.h"
 
+#include <cstdint>
 #include <stdio.h>
 
+#define DOWNSTREAM_UINT std::uint32_t
 #include "../include/benchmark.hpp"
 
 // This example blinks the Pico LED when the BOOTSEL button is pressed.
