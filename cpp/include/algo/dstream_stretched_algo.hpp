@@ -28,6 +28,33 @@ template <uint32_t S> struct bs_table {
   uint8_t data[32];
 };
 
+template <uint32_t S> struct kb_table {
+  constexpr kb_table() : data() {
+    for (uint32_t b_l = 0; b_l < S/2; ++b_l) {
+      // Need to calculate physical bunch index...
+      // ... i.e., position among bunches left-to-right in buffer space
+      const uint32_t v =
+          std::bit_width(b_l); // Nestedness depth level of physical bunch
+      const uint32_t w =
+          (S >> v) * (v != 0); // Num bunches spaced between bunches in nest level
+      const uint32_t o =
+          w >> 1; // Offset of nestedness level in physical bunch order
+      const uint32_t p =
+          b_l - std::bit_floor(b_l);  // Bunch position within nestedness level
+      const uint32_t b_p = o + w * p; // Physical bunch index...
+      // ... i.e., in left-to-right sequential bunch order
+
+      // Need to calculate buffer position of b_p'th bunch
+      const bool epsilon_k_b = (b_l != 0); // Correction factor for zeroth bunch...
+      // ... i.e., bunch r=s at site k=0
+      data[b_l] = (b_p << 1) +
+                          std::popcount((S << 1) - b_p) - 1 -
+                          epsilon_k_b; // Site index of bunch
+    }
+  }
+  uint8_t data[S/2];
+};
+
 inline uint32_t ctz_naive(uint32_t x) {
   if (x & 1)
     return 0;
@@ -89,27 +116,8 @@ uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
   }
 
   const uint32_t b_l = i; // Logical bunch index...
-  // ... i.e., in order filled (increasing nestedness/decreasing init size r)
-
-  // Need to calculate physical bunch index...
-  // ... i.e., position among bunches left-to-right in buffer space
-  const uint32_t v =
-      std::bit_width(b_l); // Nestedness depth level of physical bunch
-  const uint32_t w =
-      (S >> v) * (v != 0); // Num bunches spaced between bunches in nest level
-  const uint32_t o =
-      w >> _1; // Offset of nestedness level in physical bunch order
-  const uint32_t p =
-      b_l - std::bit_floor(b_l);  // Bunch position within nestedness level
-  const uint32_t b_p = o + w * p; // Physical bunch index...
-  // ... i.e., in left-to-right sequential bunch order
-
-  // Need to calculate buffer position of b_p'th bunch
-  const bool epsilon_k_b = (b_l != 0); // Correction factor for zeroth bunch...
-  // ... i.e., bunch r=s at site k=0
-  const uint32_t k_b = (b_p << 1) +
-                       aux::popcount_casted<uint32_t>((S << 1) - b_p) - 1 -
-                       epsilon_k_b; // Site index of bunch
+  constexpr kb_table<S> kb{};
+  const uint32_t k_b = kb.data[b_l];
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch
