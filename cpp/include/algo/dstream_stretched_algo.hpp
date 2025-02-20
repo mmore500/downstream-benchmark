@@ -12,26 +12,40 @@
 #include "../../downstream/include/downstream/_auxlib/std_bit_casted.hpp"
 #include "../../downstream/include/downstream/dstream/dstream.hpp"
 
-uint32_t _dstream_stretched_assign_storage_site(const uint32_t S,
-                                                const uint32_t T) {
+template <uint32_t S> struct bs_table {
+  constexpr bs_table() : data() {
+    for (uint32_t t = 0; t < 32; ++t) {
+      const uint32_t blt = std::bit_width(t); // Bit length of t
 
+      bool epsilon_tau = std::bit_floor(t << 1) > t + blt; // Correction factor
+      const uint32_t tau = blt - epsilon_tau;              // Current meta-epoch
+      data[t] = std::max<uint32_t>(S >> (tau + 1), 1);
+      // ^^^ Num bunches available to h.v.
+    }
+  }
+  uint8_t data[32];
+};
+
+uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
+
+  constexpr uint32_t S = 64;
   constexpr uint32_t _1{1};
   namespace aux = downstream::_auxlib;
 
-  const uint32_t s = std::bit_width(S) - _1;
+  constexpr uint32_t s = std::bit_width(S) - _1;
   const uint32_t blT = std::bit_width(T);
   const uint32_t t = blT - std::min(s, blT); // Current epoch
   const uint32_t h =
       aux::countr_zero_casted<uint32_t>(T + _1); // Current hanoi value
-  const uint32_t i = aux::overflow_shr<uint32_t>(T, h + _1);
+
+  // DEPENDS ON t, h
+  const uint32_t i = T >> (h + _1);
   // ^^^ Hanoi value incidence (i.e., num seen)
 
-  const uint32_t blt = std::bit_width(t); // Bit length of t
-  bool epsilon_tau =
-      aux::bit_floor_casted<uint32_t>(t << _1) > t + blt; // Correction factor
-  const uint32_t tau = blt - epsilon_tau;                 // Current meta-epoch
-  const uint32_t b = std::max<uint32_t>(S >> (tau + _1), _1);
-  // ^^^ Num bunches available to h.v.
+  constexpr bs_table<S> bs{};
+  const uint32_t b = bs.data[t]; // Num bunches available to hanoi value
+
+  // DEPENDS ON t, h
   if (i >= b) { // If seen more than sites reserved to hanoi value...
     return S;   // ... discard without storing
   }
@@ -61,6 +75,15 @@ uint32_t _dstream_stretched_assign_storage_site(const uint32_t S,
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch
+}
+
+uint32_t _dstream_stretched_assign_storage_site(const uint32_t S,
+                                                const uint32_t T) {
+  if (S == 64)
+    return _dstream_stretched_assign_storage_site64(T);
+  else
+    return downstream::dstream::stretched_algo_<uint32_t>::_assign_storage_site(
+        S, T);
 }
 
 struct dstream_stretched_algo {
