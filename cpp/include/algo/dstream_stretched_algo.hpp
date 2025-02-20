@@ -28,9 +28,8 @@ uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
     return S;              // ... discard without storing
   }
 
-  const uint32_t b_l = i; // Logical bunch index...
-  constexpr kb_table<S> kb{};
-  const auto k_b = kb.data[b_l];
+  const uint32_t b_l = i;             // Logical bunch index...
+  const auto k_b = lookup_kb<S>(b_l); // ... bunch offset
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch
