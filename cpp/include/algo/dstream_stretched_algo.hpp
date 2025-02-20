@@ -12,6 +12,20 @@
 #include "../../downstream/include/downstream/_auxlib/std_bit_casted.hpp"
 #include "../../downstream/include/downstream/dstream/dstream.hpp"
 
+template <uint32_t S> struct bs_table {
+  constexpr bs_table() : data() {
+    for (uint32_t t = 0; t < 32; ++t) {
+      const uint32_t blt = std::bit_width(t); // Bit length of t
+
+      bool epsilon_tau = std::bit_floor(t << 1) > t + blt; // Correction factor
+      const uint32_t tau = blt - epsilon_tau;              // Current meta-epoch
+      data[t] = std::max<uint32_t>(S >> (tau + 1), 1);
+      // ^^^ Num bunches available to h.v.
+    }
+  }
+  uint8_t data[32];
+};
+
 uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
 
   constexpr uint32_t S = 64;
@@ -28,17 +42,8 @@ uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
   const uint32_t i = T >> (h + _1);
   // ^^^ Hanoi value incidence (i.e., num seen)
 
-  // DEPENDS ON t
-  const uint32_t blt = std::bit_width(t); // Bit length of t
-
-  // DEPENDS ON t
-  bool epsilon_tau =
-      aux::bit_floor_casted<uint32_t>(t << _1) > t + blt; // Correction factor
-  // DEPENDS ON t
-  const uint32_t tau = blt - epsilon_tau; // Current meta-epoch
-  // DEPENDS ON t
-  const uint32_t b = std::max<uint32_t>(S >> (tau + _1), _1);
-  // ^^^ Num bunches available to h.v.
+  constexpr bs_table<S> bs{};
+  const uint32_t b = bs.data[t]; // Num bunches available to hanoi value
 
   // DEPENDS ON t, h
   if (i >= b) { // If seen more than sites reserved to hanoi value...
