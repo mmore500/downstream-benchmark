@@ -67,29 +67,31 @@ inline uint32_t lookup_B(const uint32_t blT, const uint32_t h) {
   return lookup_B_table.data[h * 32 + blT];
 }
 
+template <uint32_t S> uint32_t constexpr inline calc_kb(const uint32_t b_l) {
+  // Need to calculate physical bunch index...
+  // ... i.e., position among bunches left-to-right in buffer space
+  const uint32_t v =
+      std::bit_width(b_l); // Nestedness depth level of physical bunch
+  const uint32_t w =
+      (S >> v) * (v != 0); // Num bunches spaced between bunches in nest level
+  const uint32_t o =
+      w >> 1; // Offset of nestedness level in physical bunch order
+  const uint32_t p =
+      b_l - std::bit_floor(b_l);  // Bunch position within nestedness level
+  const uint32_t b_p = o + w * p; // Physical bunch index...
+  // ... i.e., in left-to-right sequential bunch order
+
+  // Need to calculate buffer position of b_p'th bunch
+  const bool epsilon_k_b = (b_l != 0); // Correction factor for zeroth bunch...
+  // ... i.e., bunch r=s at site k=0
+  return (b_p << 1) + std::popcount((S << 1) - b_p) - 1 -
+         epsilon_k_b; // Site index of bunch
+}
+
 template <uint32_t S> struct kb_table {
   constexpr kb_table() : data() {
     for (uint32_t b_l = 0; b_l < S / 2; ++b_l) {
-      // Need to calculate physical bunch index...
-      // ... i.e., position among bunches left-to-right in buffer space
-      const uint32_t v =
-          std::bit_width(b_l); // Nestedness depth level of physical bunch
-      const uint32_t w =
-          (S >> v) *
-          (v != 0); // Num bunches spaced between bunches in nest level
-      const uint32_t o =
-          w >> 1; // Offset of nestedness level in physical bunch order
-      const uint32_t p =
-          b_l - std::bit_floor(b_l);  // Bunch position within nestedness level
-      const uint32_t b_p = o + w * p; // Physical bunch index...
-      // ... i.e., in left-to-right sequential bunch order
-
-      // Need to calculate buffer position of b_p'th bunch
-      const bool epsilon_k_b =
-          (b_l != 0); // Correction factor for zeroth bunch...
-      // ... i.e., bunch r=s at site k=0
-      data[b_l] = (b_p << 1) + std::popcount((S << 1) - b_p) - 1 -
-                  epsilon_k_b; // Site index of bunch
+      data[b_l] = calc_kb<S>(b_l);
     }
   }
   smallest_unsigned_t<S>::type data[S / 2];
