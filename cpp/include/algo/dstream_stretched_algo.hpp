@@ -25,7 +25,7 @@ uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
       aux::countr_zero_casted<uint32_t>(T + _1); // Current hanoi value
 
   // DEPENDS ON t, h
-  const uint32_t i = aux::overflow_shr<uint32_t>(T, h + _1);
+  const uint32_t i = T >> (h + _1);
   // ^^^ Hanoi value incidence (i.e., num seen)
 
   // DEPENDS ON t
