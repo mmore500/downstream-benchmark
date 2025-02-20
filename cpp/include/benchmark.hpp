@@ -17,6 +17,7 @@
 #include "./algo/doubling_steady_algo.hpp"
 #include "./algo/doubling_tilted_algo.hpp"
 #include "./algo/dstream_stretched_algo.hpp"
+#include "./algo/dstream_tilted_algo.hpp"
 #include "./algo/zhao_steady_algo.hpp"
 #include "./algo/zhao_tilted_algo.hpp"
 #include "./aux/DoNotOptimize.hpp"
@@ -192,6 +193,7 @@ int run_benchmark() {
   auto out = std::ostream_iterator<benchmark_result>(std::cout);
   benchmark_assign_storage_site<control_throwaway_algo>(out);
   benchmark_assign_storage_site<dstream_stretched_algo>(out);
+  benchmark_assign_storage_site<dstream_tilted_algo>(out);
   benchmark_assign_storage_site<dstream_circular_algo_>(out);
   benchmark_assign_storage_site<dstream_compressing_algo_>(out);
   benchmark_assign_storage_site<dstream_steady_algo_>(out);
