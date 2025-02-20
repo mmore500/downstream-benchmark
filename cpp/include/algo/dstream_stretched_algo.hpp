@@ -28,55 +28,88 @@ template <uint32_t S> struct bs_table {
   uint32_t data[32];
 };
 
-template<uint32_t S>
-inline uint32_t lookup_bs(uint32_t x) {
+template <uint32_t S> inline uint32_t lookup_bs(uint32_t x) {
   constexpr bs_table<S> bs{};
-  switch(x) {
-    case 0: return bs.data[0];
-    case 1: return bs.data[1];
-    case 2: return bs.data[2];
-    case 3: return bs.data[3];
-    case 4: return bs.data[4];
-    case 5: return bs.data[5];
-    case 6: return bs.data[6];
-    case 7: return bs.data[7];
-    case 8: return bs.data[8];
-    case 9: return bs.data[9];
-    case 10: return bs.data[10];
-    case 11: return bs.data[11];
-    case 12: return bs.data[12];
-    case 13: return bs.data[13];
-    case 14: return bs.data[14];
-    case 15: return bs.data[15];
-    case 16: return bs.data[16];
-    case 17: return bs.data[17];
-    case 18: return bs.data[18];
-    case 19: return bs.data[19];
-    case 20: return bs.data[20];
-    case 21: return bs.data[21];
-    case 22: return bs.data[22];
-    case 23: return bs.data[23];
-    case 24: return bs.data[24];
-    case 25: return bs.data[25];
-    case 26: return bs.data[26];
-    case 27: return bs.data[27];
-    case 28: return bs.data[28];
-    case 29: return bs.data[29];
-    case 30: return bs.data[30];
-    case 31: return bs.data[31];
-    default: __builtin_unreachable();
+  switch (x) {
+  case 0:
+    return bs.data[0];
+  case 1:
+    return bs.data[1];
+  case 2:
+    return bs.data[2];
+  case 3:
+    return bs.data[3];
+  case 4:
+    return bs.data[4];
+  case 5:
+    return bs.data[5];
+  case 6:
+    return bs.data[6];
+  case 7:
+    return bs.data[7];
+  case 8:
+    return bs.data[8];
+  case 9:
+    return bs.data[9];
+  case 10:
+    return bs.data[10];
+  case 11:
+    return bs.data[11];
+  case 12:
+    return bs.data[12];
+  case 13:
+    return bs.data[13];
+  case 14:
+    return bs.data[14];
+  case 15:
+    return bs.data[15];
+  case 16:
+    return bs.data[16];
+  case 17:
+    return bs.data[17];
+  case 18:
+    return bs.data[18];
+  case 19:
+    return bs.data[19];
+  case 20:
+    return bs.data[20];
+  case 21:
+    return bs.data[21];
+  case 22:
+    return bs.data[22];
+  case 23:
+    return bs.data[23];
+  case 24:
+    return bs.data[24];
+  case 25:
+    return bs.data[25];
+  case 26:
+    return bs.data[26];
+  case 27:
+    return bs.data[27];
+  case 28:
+    return bs.data[28];
+  case 29:
+    return bs.data[29];
+  case 30:
+    return bs.data[30];
+  case 31:
+    return bs.data[31];
+  default:
+    __builtin_unreachable();
   }
 }
 
 template <uint32_t S> struct kb_table {
   constexpr kb_table() : data() {
-    for (uint32_t b_l = 0; b_l < S/2; ++b_l) {
+    for (uint32_t b_l = 0; b_l < S / 2; ++b_l) {
       // Need to calculate physical bunch index...
       // ... i.e., position among bunches left-to-right in buffer space
       const uint32_t v =
           std::bit_width(b_l); // Nestedness depth level of physical bunch
       const uint32_t w =
-          (S >> v) * (v != 0); // Num bunches spaced between bunches in nest level
+          (S >> v) *
+          (v != 0); // Num bunches spaced between bunches in nest level
       const uint32_t o =
           w >> 1; // Offset of nestedness level in physical bunch order
       const uint32_t p =
@@ -85,14 +118,14 @@ template <uint32_t S> struct kb_table {
       // ... i.e., in left-to-right sequential bunch order
 
       // Need to calculate buffer position of b_p'th bunch
-      const bool epsilon_k_b = (b_l != 0); // Correction factor for zeroth bunch...
+      const bool epsilon_k_b =
+          (b_l != 0); // Correction factor for zeroth bunch...
       // ... i.e., bunch r=s at site k=0
-      data[b_l] = (b_p << 1) +
-                          std::popcount((S << 1) - b_p) - 1 -
-                          epsilon_k_b; // Site index of bunch
+      data[b_l] = (b_p << 1) + std::popcount((S << 1) - b_p) - 1 -
+                  epsilon_k_b; // Site index of bunch
     }
   }
-  uint8_t data[S/2];
+  uint16_t data[S / 2];
 };
 
 inline uint32_t ctz_naive(uint32_t x) {
@@ -129,39 +162,72 @@ inline uint32_t log2_naive(uint32_t v) {
   v |= v >> 16;
 
   switch ((v * 0x07C4ACDDU) >> 27) {
-    case 0: return 0;
-    case 1: return 9;
-    case 2: return 1;
-    case 3: return 10;
-    case 4: return 13;
-    case 5: return 21;
-    case 6: return 2;
-    case 7: return 29;
-    case 8: return 11;
-    case 9: return 14;
-    case 10: return 16;
-    case 11: return 18;
-    case 12: return 22;
-    case 13: return 25;
-    case 14: return 3;
-    case 15: return 30;
-    case 16: return 8;
-    case 17: return 12;
-    case 18: return 20;
-    case 19: return 28;
-    case 20: return 15;
-    case 21: return 17;
-    case 22: return 24;
-    case 23: return 7;
-    case 24: return 19;
-    case 25: return 27;
-    case 26: return 23;
-    case 27: return 6;
-    case 28: return 26;
-    case 29: return 5;
-    case 30: return 4;
-    case 31: return 31;
-    default: __builtin_unreachable();
+  case 0:
+    return 0;
+  case 1:
+    return 9;
+  case 2:
+    return 1;
+  case 3:
+    return 10;
+  case 4:
+    return 13;
+  case 5:
+    return 21;
+  case 6:
+    return 2;
+  case 7:
+    return 29;
+  case 8:
+    return 11;
+  case 9:
+    return 14;
+  case 10:
+    return 16;
+  case 11:
+    return 18;
+  case 12:
+    return 22;
+  case 13:
+    return 25;
+  case 14:
+    return 3;
+  case 15:
+    return 30;
+  case 16:
+    return 8;
+  case 17:
+    return 12;
+  case 18:
+    return 20;
+  case 19:
+    return 28;
+  case 20:
+    return 15;
+  case 21:
+    return 17;
+  case 22:
+    return 24;
+  case 23:
+    return 7;
+  case 24:
+    return 19;
+  case 25:
+    return 27;
+  case 26:
+    return 23;
+  case 27:
+    return 6;
+  case 28:
+    return 26;
+  case 29:
+    return 5;
+  case 30:
+    return 4;
+  case 31:
+    return 31;
+  default:
+    __builtin_unreachable();
   }
 }
 
@@ -187,7 +253,7 @@ uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
 
   const uint32_t b_l = i; // Logical bunch index...
   constexpr kb_table<S> kb{};
-  const uint32_t k_b = kb.data[b_l];
+  const auto k_b = kb.data[b_l];
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch
