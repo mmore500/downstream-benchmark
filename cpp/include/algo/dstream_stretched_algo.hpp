@@ -13,7 +13,6 @@ template <uint32_t S>
 uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
 
   constexpr uint32_t _1{1};
-  namespace aux = downstream::_auxlib;
 
   const uint32_t blT = log2_naive(T) + bool(T);
   const uint32_t h = ctz_naive(T + _1); // Current hanoi value
