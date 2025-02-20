@@ -21,7 +21,7 @@ template <uint32_t S> struct bs_table {
 
       bool epsilon_tau = std::bit_floor(t << 1) > t + blt; // Correction factor
       const uint32_t tau = blt - epsilon_tau;              // Current meta-epoch
-      data[t] = std::max<uint32_t>(S >> (tau + 1), 1);
+      data[blT] = std::max<uint32_t>(S >> (tau + 1), 1);
       // ^^^ Num bunches available to h.v.
     }
   }
