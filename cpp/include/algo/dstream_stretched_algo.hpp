@@ -27,11 +27,16 @@ template <uint32_t S> struct bs_table {
 };
 
 inline uint32_t ctz_naive(uint32_t x) {
-  if (x & 1) return 0;
-  else if (x & 2) return 1;
-  else if (x & 4) return 2;
-  else if (x & 8) return 3;
-  else if (x & 16) return 4;
+  if (x & 1)
+    return 0;
+  else if (x & 2)
+    return 1;
+  else if (x & 4)
+    return 2;
+  else if (x & 8)
+    return 3;
+  else if (x & 16)
+    return 4;
 
   uint32_t n = 5;
   x >>= 5;
@@ -51,7 +56,7 @@ uint32_t _dstream_stretched_assign_storage_site64(const uint32_t T) {
   constexpr uint32_t s = std::bit_width(S) - _1;
   const uint32_t blT = std::bit_width(T);
   const uint32_t t = blT - std::min(s, blT); // Current epoch
-  const uint32_t h = ctz_naive(T + _1); // Current hanoi value
+  const uint32_t h = ctz_naive(T + _1);      // Current hanoi value
 
   // DEPENDS ON t, h
   const uint32_t i = T >> (h + _1);
@@ -108,7 +113,9 @@ struct dstream_stretched_algo {
 
     using u32 = uint32_t;
     using dstream_stretched_algo = downstream::dstream::stretched_algo_<u32>;
-    assert(result == dstream_stretched_algo::_assign_storage_site(S, T));
+    [[maybe_unused]] const auto expected =
+        dstream_stretched_algo::_assign_storage_site(S, T);
+    assert(result == expected);
 
     return result;
   }
