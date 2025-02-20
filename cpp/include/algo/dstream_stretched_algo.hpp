@@ -51,53 +51,20 @@ inline uint32_t ctz_naive(uint32_t x) {
 
 // https://graphics.stanford.edu/~seander/bithacks.html
 inline uint32_t log2_naive(uint32_t v) {
-  constexpr char LogTable256[256] = {
-#define LT(n) n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n
-      static_cast<char>(-1),
-      0,
-      1,
-      1,
-      2,
-      2,
-      2,
-      2,
-      3,
-      3,
-      3,
-      3,
-      3,
-      3,
-      3,
-      3,
-      LT(4),
-      LT(5),
-      LT(5),
-      LT(6),
-      LT(6),
-      LT(6),
-      LT(6),
-      LT(7),
-      LT(7),
-      LT(7),
-      LT(7),
-      LT(7),
-      LT(7),
-      LT(7),
-      LT(7)};
 
-  uint32_t r;  // r will be lg(v)
-  uint32_t tt; // temporaries
+  static const int MultiplyDeBruijnBitPosition[32] =
+  {
+    0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+    8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+  };
 
-  if ((tt = (v >> 24))) {
-    r = 24 + LogTable256[tt];
-  } else if ((tt = (v >> 16))) {
-    r = 16 + LogTable256[tt];
-  } else if ((tt = (v >> 8))) {
-    r = 8 + LogTable256[tt];
-  } else {
-    r = LogTable256[v];
-  }
-  return r;
+  v |= v >> 1; // first round down to one less than a power of 2
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+
+  return MultiplyDeBruijnBitPosition[(uint32_t)(v * 0x07C4ACDDU) >> 27];
 }
 
 template <uint32_t S>
@@ -106,7 +73,7 @@ uint32_t _dstream_stretched_assign_storage_site_impl(const uint32_t T) {
   constexpr uint32_t _1{1};
   namespace aux = downstream::_auxlib;
 
-  const uint32_t blT = log2_naive(T);
+  const uint32_t blT = log2_naive(T) + bool(T);
   const uint32_t h = ctz_naive(T + _1); // Current hanoi value
 
   // DEPENDS ON t, h
