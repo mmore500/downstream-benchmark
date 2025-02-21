@@ -138,7 +138,7 @@ benchmark_result time_assign_storage_site(const uint32_t replicate,
 
 template <typename algo, typename dtype, uint32_t num_sites, typename OutputIt>
 void benchmark_assign_storage_site_(OutputIt out) {
-  const uint32_t num_replicates = 20;
+  const uint32_t num_replicates = 10;
   for (const uint32_t num_items : {10'000, 100'000, 1'000'000}) {
     uint32_t replicate{};
     std::generate_n(out, num_replicates, [num_items, &replicate]() {
@@ -153,13 +153,6 @@ void benchmark_assign_storage_site_(OutputIt out) {
 
 template <typename algo, typename OutputIt>
 void benchmark_assign_storage_site(OutputIt out) {
-#ifndef __arm__ // skip on pico, to avoid out of memory error
-  benchmark_assign_storage_site_<algo, uint64_t, 4096>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 1024>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 256>(out);
-  benchmark_assign_storage_site_<algo, uint64_t, 64>(out);
-#endif
-
   benchmark_assign_storage_site_<algo, uint32_t, 4096>(out);
   benchmark_assign_storage_site_<algo, uint32_t, 1024>(out);
   benchmark_assign_storage_site_<algo, uint32_t, 256>(out);
