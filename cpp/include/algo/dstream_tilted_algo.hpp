@@ -23,13 +23,17 @@ uint32_t _dstream_tilted_assign_storage_site_impl(const uint32_t T) {
   // ^^^ Hanoi value incidence (i.e., num seen)
 
   uint32_t B;
-  if (h < 4) [[likely]]
-    B = lookup_B<S, 4>(blT, h);
+  if (h < 8) [[likely]]
+    B = lookup_B<S, 8>(blT, h);
   else
     B = calc_B<S>(blT, h);
 
   const uint32_t b_l = aux::modpow2(i, B);
-  const auto k_b = lookup_kb<S>(b_l); // ... bunch offset
+  uint32_t k_b; // ... bunch offset
+  if constexpr (S <= 256)
+    k_b = lookup_kb<S>(b_l);
+  else
+    k_b = calc_kb<S>(b_l);
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch

@@ -6,6 +6,7 @@
 #include <cstdint>
 
 #include "../aux/NOFLASH.hpp"
+#include "../aux/smallbitops.hpp"
 #include "../aux/smallest_unsigned_t.hpp"
 
 template <uint32_t S> struct bs_table {
@@ -68,24 +69,33 @@ inline uint32_t lookup_B(const uint32_t blT, const uint32_t h) {
 }
 
 template <uint32_t S> uint32_t constexpr inline calc_kb(const uint32_t b_l) {
+  if (b_l == 0)
+    return 0;
   // Need to calculate physical bunch index...
   // ... i.e., position among bunches left-to-right in buffer space
-  const uint32_t v =
-      std::bit_width(b_l); // Nestedness depth level of physical bunch
+  uint32_t v; // Nestedness depth level of physical bunch
+  if constexpr (S <= 256)
+    v = bitwidth_uint8(b_l);
+  else
+    v = bitwidth_uint16(b_l);
   const uint32_t w =
-      (S >> v) * (v != 0); // Num bunches spaced between bunches in nest level
+      (S >> v); // Num bunches spaced between bunches in nest level
   const uint32_t o =
       w >> 1; // Offset of nestedness level in physical bunch order
   const uint32_t p =
-      b_l - std::bit_floor(b_l);  // Bunch position within nestedness level
+      b_l - (1 << (v - 1));       // Bunch position within nestedness level
   const uint32_t b_p = o + w * p; // Physical bunch index...
   // ... i.e., in left-to-right sequential bunch order
 
   // Need to calculate buffer position of b_p'th bunch
-  const bool epsilon_k_b = (b_l != 0); // Correction factor for zeroth bunch...
   // ... i.e., bunch r=s at site k=0
-  return (b_p << 1) + std::popcount((S << 1) - b_p) - 1 -
-         epsilon_k_b; // Site index of bunch
+  if constexpr (S <= 128) {
+    return (b_p << 1) + popcount_uint8((S << 1) - b_p) -
+           2; // Site index of bunch
+  } else {
+    return (b_p << 1) + popcount_uint16((S << 1) - b_p) -
+           2; // Site index of bunch
+  }
 }
 
 template <uint32_t S> struct kb_table {
