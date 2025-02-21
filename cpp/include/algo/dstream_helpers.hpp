@@ -71,31 +71,21 @@ inline uint32_t lookup_B(const uint32_t blT, const uint32_t h) {
 template <uint32_t S> uint32_t constexpr inline calc_kb(const uint32_t b_l) {
   if (b_l == 0)
     return 0;
-  // Need to calculate physical bunch index...
-  // ... i.e., position among bunches left-to-right in buffer space
-  uint32_t v; // Nestedness depth level of physical bunch
-  if constexpr (S <= 256)
-    v = bitwidth_uint8(b_l);
-  else
-    v = bitwidth_uint16(b_l);
-  const uint32_t w =
-      (S >> v); // Num bunches spaced between bunches in nest level
-  const uint32_t o =
-      w >> 1; // Offset of nestedness level in physical bunch order
-  const uint32_t p =
-      b_l - (1 << (v - 1));       // Bunch position within nestedness level
-  const uint32_t b_p = o + w * p; // Physical bunch index...
-  // ... i.e., in left-to-right sequential bunch order
 
-  // Need to calculate buffer position of b_p'th bunch
-  // ... i.e., bunch r=s at site k=0
-  if constexpr (S <= 128) {
-    return (b_p << 1) + popcount_uint8((S << 1) - b_p) -
-           2; // Site index of bunch
-  } else {
-    return (b_p << 1) + popcount_uint16((S << 1) - b_p) -
-           2; // Site index of bunch
-  }
+  constexpr uint32_t twoS = S << 1;
+  // Compute nestedness depth level based on S.
+  const uint32_t v = (S <= 256) ? bitwidth_uint8(b_l) : bitwidth_uint16(b_l);
+  const uint32_t w =
+      S >> v; // Number of bunches spaced between bunches at this nest level.
+  const uint32_t o = w >> 1;               // Offset in physical bunch order.
+  const uint32_t p = b_l - (1 << (v - 1)); // Position within the nest level.
+  const uint32_t b_p = o + w * p;          // Physical bunch index.
+
+  // Use appropriate popcount function depending on S.
+  return (b_p << 1) +
+         ((S <= 128) ? popcount_uint8(twoS - b_p)
+                     : popcount_uint16(twoS - b_p)) -
+         2;
 }
 
 template <uint32_t S> struct kb_table {
