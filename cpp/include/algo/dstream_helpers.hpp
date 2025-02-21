@@ -32,11 +32,11 @@ template <uint32_t S> inline uint32_t lookup_bs(uint32_t x) {
 
 template <uint32_t S>
 uint32_t inline constexpr calc_B(const uint32_t blT, const uint32_t h) {
-  const uint32_t s = std::bit_width(S) - 1;
+  constexpr uint32_t s = std::bit_width(S) - 1;
   const uint32_t t = blT - std::min(s, blT); // Current epoch
 
   const uint32_t blt = std::bit_width(t); // Bit length of t
-  bool epsilon_tau =
+  const bool epsilon_tau =
       std::bit_floor<uint32_t>(t << 1) > t + blt; // Correction factor
   const uint32_t tau = blt - epsilon_tau;         // Current meta-epoch
   const uint32_t t_0 = (1 << tau) - tau;          // Opening epoch of meta-epoch
