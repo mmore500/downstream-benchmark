@@ -35,9 +35,12 @@ uint32_t inline constexpr calc_B(const uint32_t blT, const uint32_t h) {
   constexpr uint32_t s = std::bit_width(S) - 1;
   const uint32_t t = blT - std::min(s, blT); // Current epoch
 
-  const uint32_t blt = std::bit_width(t); // Bit length of t
+  const uint32_t blt = bitwidth_uint8(t); // Bit length of t
   const bool epsilon_tau =
       std::bit_floor<uint32_t>(t << 1) > t + blt; // Correction factor
+  // for some reason calculating epsilon_tau as
+  //   !((t + blt) >> blt)
+  // substantially pessimizes performance on raspberry pi pico
   const uint32_t tau = blt - epsilon_tau;         // Current meta-epoch
   const uint32_t t_0 = (1 << tau) - tau;          // Opening epoch of meta-epoch
   const uint32_t t_1 =
