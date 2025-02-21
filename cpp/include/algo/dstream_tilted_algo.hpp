@@ -29,9 +29,11 @@ uint32_t _dstream_tilted_assign_storage_site_impl(const uint32_t T) {
     B = calc_B<S>(blT, h);
 
   const uint32_t b_l = aux::modpow2(i, B);
-  ; // Logical bunch index...
-  constexpr kb_table<S> kb{};
-  const auto k_b = kb.data[b_l];
+  uint32_t k_b; // ... bunch offset
+  if constexpr (S <= 256)
+    k_b = lookup_kb<S>(b_l);
+  else
+    k_b = calc_kb<S>(b_l);
 
   return k_b + h; // Calculate placement site...
                   // ... where h.v. h is offset within bunch
