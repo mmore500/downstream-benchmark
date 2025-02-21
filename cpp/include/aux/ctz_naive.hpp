@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-inline uint32_t ctz_naive(uint32_t x) {
+__attribute__((hot)) inline uint32_t ctz_naive(uint32_t x) {
   for (uint8_t i = 0; i < 32; i += 4) {
     switch (x & 0xF) {
     case 0:
