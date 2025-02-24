@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ALGO_ZHAO_TILTED_ALGO_HPP_INCLUDE
+#define ALGO_ZHAO_TILTED_ALGO_HPP_INCLUDE
 
 #include <algorithm>
 #include <cstdint>
@@ -53,3 +55,4 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
   DoNotOptimize(gen.state);
   return sizeof_vector(storage) + sizeof_vector(segment_lengths);
 }
+#endif // #ifndef ALGO_ZHAO_TILTED_ALGO_HPP_INCLUDE

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_XORSHIFT_GENERATOR_HPP_INCLUDE
+#define AUX_XORSHIFT_GENERATOR_HPP_INCLUDE
 
 #include <cstdint>
 
@@ -18,3 +20,4 @@ struct xorshift_generator {
     return x;
   }
 };
+#endif // #ifndef AUX_XORSHIFT_GENERATOR_HPP_INCLUDE
