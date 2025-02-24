@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_LOG2_NAIVE_HPP_INCLUDE
+#define AUX_LOG2_NAIVE_HPP_INCLUDE
 
 #include <cstdint>
 
@@ -17,3 +19,4 @@ __attribute__((hot)) inline uint8_t log2_naive(uint32_t v) {
       8, 12, 20, 28, 15, 17, 24, 7,  19, 27, 23, 6,  26, 5,  4, 31};
   return MultiplyDeBruijnBitPosition[(v * 0x07C4ACDDU) >> 27];
 }
+#endif // #ifndef AUX_LOG2_NAIVE_HPP_INCLUDE
