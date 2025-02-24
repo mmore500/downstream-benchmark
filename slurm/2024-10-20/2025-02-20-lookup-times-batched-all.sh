@@ -276,12 +276,12 @@ def do_timings():
             T_limit = 2**16
             T = np.random.randint(S, T_limit, size=T_size, dtype=np.int64)
             measure_execution_time(algo_func, S, T, T_limit, records)
-            
+
             # test with T upper bound 2^32
             T_limit = 2**32
             T = np.random.randint(S, T_limit, size=T_size, dtype=np.int64)
             measure_execution_time(algo_func, S, T, T_limit, records)
-            
+
     df = pd.DataFrame.from_records(records)
     df["SLURM_ARRAY_TASK_ID"] = "\${SLURM_ARRAY_TASK_ID:-notid}"
     return df
