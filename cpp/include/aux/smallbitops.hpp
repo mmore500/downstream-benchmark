@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_SMALLBITOPS_HPP_INCLUDE
+#define AUX_SMALLBITOPS_HPP_INCLUDE
 
 #include <bit>
 #include <cstdint>
@@ -63,3 +65,4 @@ constexpr inline uint16_t bitwidth_uint16(const uint16_t x) {
   else [[likely]]
     return bitwidth_uint8(x);
 }
+#endif // #ifndef AUX_SMALLBITOPS_HPP_INCLUDE
