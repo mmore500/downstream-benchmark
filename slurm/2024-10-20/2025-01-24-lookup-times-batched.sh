@@ -251,7 +251,7 @@ def measure_execution_time(func, S: int, T: np.ndarray, T_limit: int, records):
 
     realTime = t2[0] - t1[0]
     cpuTime = t2[1] - t1[1]
- 
+
     records.append({
         "Algorithm": func.__name__,
         "Surface Size (S)": S,
