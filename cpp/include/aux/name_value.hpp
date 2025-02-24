@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_NAME_VALUE_HPP_INCLUDE
+#define AUX_NAME_VALUE_HPP_INCLUDE
 
 #include <cstdint>
 #include <string_view>
@@ -18,3 +20,4 @@ template <typename dtype> std::string_view name_value() {
   } else
     static_assert(false);
 }
+#endif // #ifndef AUX_NAME_VALUE_HPP_INCLUDE
