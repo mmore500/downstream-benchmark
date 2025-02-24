@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ALGO_DSTREAM_HELPERS_HPP_INCLUDE
+#define ALGO_DSTREAM_HELPERS_HPP_INCLUDE
 
 #include <algorithm>
 #include <bit>
@@ -104,3 +106,4 @@ template <uint32_t S> inline uint32_t lookup_kb(const uint32_t b_l) {
   const static kb_table<S> NOFLASH lookup_kb_table{};
   return lookup_kb_table.data[b_l];
 }
+#endif // #ifndef ALGO_DSTREAM_HELPERS_HPP_INCLUDE

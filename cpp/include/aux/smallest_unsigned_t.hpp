@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_SMALLEST_UNSIGNED_T_HPP_INCLUDE
+#define AUX_SMALLEST_UNSIGNED_T_HPP_INCLUDE
 
 #include <stdint.h>
 
@@ -28,3 +30,4 @@ template <> struct SelectInteger_<64> {
 
 template <unsigned long long Max>
 struct smallest_unsigned_t : SelectInteger_<RequiredBits<Max>::value> {};
+#endif // #ifndef AUX_SMALLEST_UNSIGNED_T_HPP_INCLUDE
