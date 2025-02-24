@@ -1,4 +1,6 @@
 #pragma once
+#ifndef BENCHMARK_HPP_INCLUDE
+#define BENCHMARK_HPP_INCLUDE
 
 #include <array>
 #include <bitset>
@@ -198,3 +200,4 @@ int run_benchmark() {
   benchmark_assign_storage_site<zhao_tilted_algo>(out);
   return 0;
 }
+#endif // #ifndef BENCHMARK_HPP_INCLUDE
