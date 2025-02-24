@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_NOFLASH_HPP_INCLUDE
+#define AUX_NOFLASH_HPP_INCLUDE
 
 #if __has_include("pico/platform/sections.h")
 #include "pico/platform/sections.h"
@@ -6,3 +8,4 @@
 #else
 #define NOFLASH
 #endif
+#endif // #ifndef AUX_NOFLASH_HPP_INCLUDE
