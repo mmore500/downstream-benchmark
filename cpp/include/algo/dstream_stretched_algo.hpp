@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ALGO_DSTREAM_STRETCHED_ALGO_HPP_INCLUDE
+#define ALGO_DSTREAM_STRETCHED_ALGO_HPP_INCLUDE
 
 #include <cassert>
 #include <string_view>
@@ -67,3 +69,4 @@ struct dstream_stretched_algo {
     return result;
   }
 };
+#endif // #ifndef ALGO_DSTREAM_STRETCHED_ALGO_HPP_INCLUDE

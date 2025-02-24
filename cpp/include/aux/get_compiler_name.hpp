@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_GET_COMPILER_NAME_HPP_INCLUDE
+#define AUX_GET_COMPILER_NAME_HPP_INCLUDE
 
 #include <string_view>
 
@@ -12,3 +14,4 @@ constexpr std::string_view get_compiler_name() {
       "unknown";
 #endif
 }
+#endif // #ifndef AUX_GET_COMPILER_NAME_HPP_INCLUDE

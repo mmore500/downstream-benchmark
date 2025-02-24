@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ALGO_CONTROL_THROWAWAY_ALGO_HPP_INCLUDE
+#define ALGO_CONTROL_THROWAWAY_ALGO_HPP_INCLUDE
 
 #include <cstdint>
 #include <string_view>
@@ -9,3 +11,4 @@ struct control_throwaway_algo {
     return S;
   }
 };
+#endif // #ifndef ALGO_CONTROL_THROWAWAY_ALGO_HPP_INCLUDE
