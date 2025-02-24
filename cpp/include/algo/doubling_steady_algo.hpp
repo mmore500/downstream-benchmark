@@ -12,8 +12,8 @@
 
 #include "../../downstream/include/downstream/_auxlib/modpow2.hpp"
 
-#include "../aux/divpow2.hpp"
 #include "../aux/DoNotOptimize.hpp"
+#include "../aux/divpow2.hpp"
 #include "../aux/downcast_value.hpp"
 #include "../aux/sizeof_vector.hpp"
 #include "../aux/xorshift_generator.hpp"
