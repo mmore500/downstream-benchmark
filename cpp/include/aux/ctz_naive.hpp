@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AUX_CTZ_NAIVE_HPP_INCLUDE
+#define AUX_CTZ_NAIVE_HPP_INCLUDE
 
 #include <cstdint>
 
@@ -44,3 +46,4 @@ __attribute__((hot)) inline uint32_t ctz_naive(uint32_t x) {
   }
   return 32;
 }
+#endif // #ifndef AUX_CTZ_NAIVE_HPP_INCLUDE
