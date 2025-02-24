@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ALGO_DOUBLING_STEADY_ALGO_HPP_INCLUDE
+#define ALGO_DOUBLING_STEADY_ALGO_HPP_INCLUDE
 
 #include <algorithm>
 #include <array>
@@ -71,3 +73,4 @@ execute_doubling_steady_assign_storage_site(const uint32_t num_items) {
   DoNotOptimize(gen.state);
   return sizeof(storage_t) + sizeof(uint32_t /* i */);
 }
+#endif // #ifndef ALGO_DOUBLING_STEADY_ALGO_HPP_INCLUDE
