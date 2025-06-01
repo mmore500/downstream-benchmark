@@ -32,7 +32,7 @@ execute_zhao_tilted_full_assign_storage_site(const uint32_t num_items) {
 
   xorshift_generator gen{};
   for (uint32_t i = 0; i < num_items; ++i) {
-    const auto data = downcast_value<dtype>(i);
+    const auto data = downcast_value<dtype>(gen());
 
     if (i < num_sites) {
       storage.push_back(data);
