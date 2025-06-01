@@ -25,7 +25,8 @@ template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_zhao_tilted_full_assign_storage_site(const uint32_t num_items) {
   using segment_lengths_t = smallest_unsigned_t<num_sites>::type;
-  std::array<segment_lengths_t, num_sites> segment_lengths{};
+  constexpr auto max_segments = std::min(num_sites, 64u);
+  std::array<segment_lengths_t, max_segments> segment_lengths{};
 
   std::vector<dtype> storage;
   DoNotOptimize(storage);
