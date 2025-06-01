@@ -22,6 +22,7 @@
 #include "./algo/dstream_tilted_algo.hpp"
 #include "./algo/zhao_steady_algo.hpp"
 #include "./algo/zhao_tilted_algo.hpp"
+#include "./algo/zhao_tilted_full_algo.hpp"
 #include "./aux/DoNotOptimize.hpp"
 #include "./aux/downcast_value.hpp"
 #include "./aux/get_compiler_name.hpp"
@@ -117,6 +118,14 @@ struct execute_assign_storage_site<dtype, num_sites, zhao_tilted_algo> {
   }
 };
 
+template <typename dtype, uint32_t num_sites>
+struct execute_assign_storage_site<dtype, num_sites, zhao_tilted_full_algo> {
+  static uint32_t operator()(const uint32_t num_items) {
+    return execute_zhao_tilted_full_assign_storage_site<dtype, num_sites>(
+        num_items);
+  }
+};
+
 template <typename algo, typename dtype, uint32_t num_sites>
 benchmark_result time_assign_storage_site(const uint32_t replicate,
                                           const uint32_t num_items) {
@@ -198,6 +207,7 @@ int run_benchmark() {
   benchmark_assign_storage_site<doubling_tilted_algo>(out);
   benchmark_assign_storage_site<zhao_steady_algo>(out);
   benchmark_assign_storage_site<zhao_tilted_algo>(out);
+  benchmark_assign_storage_site<zhao_tilted_full_algo>(out);
   return 0;
 }
 #endif // #ifndef BENCHMARK_HPP_INCLUDE
