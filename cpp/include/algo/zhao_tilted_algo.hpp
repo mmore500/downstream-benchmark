@@ -20,7 +20,7 @@ struct zhao_tilted_algo {
 template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
-  std::vector<uint32_t> segment_lengths;
+  std::vector<uint8_t> segment_lengths;
   std::vector<dtype> storage;
   segment_lengths.reserve(num_sites);
   storage.reserve(num_sites);
@@ -31,7 +31,7 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
     const auto data = downcast_value<dtype>(gen());
 
     storage.push_back(data);
-    segment_lengths.push_back(1);
+    segment_lengths.push_back(0);
 
     const auto indexRange = std::ranges::reverse_view(
         std::views::iota(size_t{}, static_cast<size_t>(storage.size() - 1)));
@@ -45,7 +45,8 @@ execute_zhao_tilted_assign_storage_site(const uint32_t num_items) {
 
     const auto collapse_idx = *collapse_iter;
 
-    segment_lengths[collapse_idx] += segment_lengths[collapse_idx + 1];
+    assert(segment_lengths[collapse_idx] == segment_lengths[collapse_idx + 1]);
+    segment_lengths[collapse_idx] += 1;
     storage.erase(std::next(std::begin(storage), collapse_idx + 1));
     segment_lengths.erase(
         std::next(std::begin(segment_lengths), collapse_idx + 1));
