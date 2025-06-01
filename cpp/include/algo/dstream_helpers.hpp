@@ -43,8 +43,8 @@ uint32_t inline constexpr calc_B(const uint32_t blT, const uint32_t h) {
   // for some reason calculating epsilon_tau as
   //   !((t + blt) >> blt)
   // substantially pessimizes performance on raspberry pi pico
-  const uint32_t tau = blt - epsilon_tau;         // Current meta-epoch
-  const uint32_t t_0 = (1 << tau) - tau;          // Opening epoch of meta-epoch
+  const uint32_t tau = blt - epsilon_tau; // Current meta-epoch
+  const uint32_t t_0 = (1 << tau) - tau;  // Opening epoch of meta-epoch
   const uint32_t t_1 =
       (1 << (tau + 1)) - (tau + 1); // Opening epoch of next meta-epoch
   const bool epsilon_b =
