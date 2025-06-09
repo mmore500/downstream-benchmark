@@ -249,7 +249,7 @@ algorithms = [
 ]
 
 surface_sizes = [64, 256, 1024]
-T_size = 1048576
+T_size = 65536
 
 def do_timings():
     records = []
