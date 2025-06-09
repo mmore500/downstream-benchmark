@@ -205,10 +205,10 @@ cat > "${SBATCH_FILE}" << EOF
 #SBATCH --time=4:00:00
 #SBATCH --nodelist=amr-[000-101]
 #SBATCH --output="/mnt/home/%u/joblog/%j"
-#SBATCH --mail-user=joeywagner024@gmail.com
+#SBATCH --mail-user=mawni4ah2o@pomail.net
 #SBATCH --mail-type=FAIL,TIME_LIMIT
 #SBATCH --requeue
-#SBATCH --array=0-5
+#SBATCH --array=0-29
 
 ${JOB_PREAMBLE}
 
@@ -335,7 +335,7 @@ cat > "${SBATCH_FILE}" << EOF
 #SBATCH --mem=64G
 #SBATCH --time=4:00:00
 #SBATCH --output="/mnt/home/%u/joblog/%j"
-#SBATCH --mail-user=joeywagner024@gmail.com
+#SBATCH --mail-user=mawni4ah2o@pomail.net
 #SBATCH --mail-type=ALL
 #SBATCH --requeue
 
