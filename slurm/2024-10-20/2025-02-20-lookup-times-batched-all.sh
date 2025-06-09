@@ -102,16 +102,7 @@ echo "python3.10 --version $(python3.10 --version)"
 for attempt in {1..5}; do
     python3.10 -m pip install --upgrade pip setuptools wheel || :
     python3.10 -m pip install --upgrade uv \
-    && python3.10 -m uv pip install \
-        'more_itertools==10.*' \
-        'numpy==1.*' \
-        'joinem==0.7.0' \
-        'pandas==1.*' \
-        'polars==1.6.*' \
-        'pyarrow==15.*' \
-        'scipy==1.*' \
-        'tqdm==4.*' \
-        "git+${HSTRAT_REMOTE_URL}@${HSTRAT_REVISION}" \
+    && python3.10 -m uv pip install -r ${BATCHDIR_JOBSOURCE}/requirements.txt \
     && break || echo "pip install attempt ${attempt} failed"
     if [ ${attempt} -eq 3 ]; then
         echo "pip install failed"
@@ -221,17 +212,10 @@ lshw || :
 echo "cpuinfo ----------------------------------------------------- \${SECONDS}"
 cat /proc/cpuinfo || :
 
-echo "do work ----------------------------------------------------- \${SECONDS}"
-
-
 echo "set up venv ------------------------------------------------- \${SECONDS}"
-git clone https://github.com/mmore500/downstream-benchmark.git --single-branch
-cd downstream-benchmark/
-python3 -m venv env
-source env/bin/activate
-python3 -m pip install -r requirements.txt
+source ${BATCHDIR_ENV}/bin/activate
 
-
+echo "do work ----------------------------------------------------- \${SECONDS}"
 python3 << EOF_
 
 import time
