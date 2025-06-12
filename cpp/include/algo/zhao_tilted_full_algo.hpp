@@ -28,34 +28,40 @@ execute_zhao_tilted_full_assign_storage_site(const uint32_t num_items) {
   constexpr auto max_segments = std::min(num_sites, 64u);
   std::array<segment_lengths_t, max_segments> segment_lengths{};
 
-  std::vector<dtype> storage;
+  // use vector to allow for vector<bool>
+  std::vector<dtype> storage(num_sites);
   DoNotOptimize(storage);
 
   xorshift_generator gen{};
-  for (uint32_t i = 0; i < num_items; ++i) {
+  for (uint32_t T = 0; T < num_items; ++T) {
     const auto data = downcast_value<dtype>(gen());
 
-    if (i < num_sites) {
-      storage.push_back(data);
+    if (T < num_sites) {
+      storage[T] = data;
       segment_lengths[0] += 1;
       continue;
     }
 
-    uint32_t pos = 0;
-    uint32_t j;
-    for (j = 0;
-         segment_lengths[j] <= segment_lengths[j + 1] && segment_lengths[j + 1];
-         ++j) {
-      pos += segment_lengths[j];
-    }
-    pos += segment_lengths[j];
-    segment_lengths[j] -= 2;
-    segment_lengths[j + 1] += 1;
+    constexpr auto S = num_sites;
+    auto& w = segment_lengths;
+    auto& b = storage;
 
-    const auto erase_idx = num_sites - pos;
-    storage.erase(std::next(std::begin(storage), erase_idx));
-    storage.push_back(data);
-    segment_lengths[0] += 1;
+    w[0] += 1;
+    uint32_t i = S;
+    uint32_t j = 0;
+    while (w[j] <= w[j + 1]) {
+      i -= w[j];
+      j += 1;
+      assert(j < max_segments);
+    }
+
+    w[j] -= 2;
+    w[j + 1] += 1;
+
+    const auto erase_idx = i - w[j];
+    b.erase(std::next(std::begin(storage), erase_idx));
+    b.push_back(data);
+
   }
 
   DoNotOptimize(storage);
