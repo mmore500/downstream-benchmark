@@ -25,7 +25,9 @@ template <typename dtype, uint32_t num_sites>
 __attribute__((hot)) uint32_t
 execute_zhao_tilted_full_assign_storage_site(const uint32_t num_items) {
   using segment_lengths_t = smallest_unsigned_t<num_sites>::type;
-  constexpr auto max_segments = std::min(num_sites, 64u);
+  constexpr auto max_segments = std::min(
+    num_sites, static_cast<uint32_t>(64)
+  );
   std::array<segment_lengths_t, max_segments> segment_lengths{};
 
   // use vector to allow for vector<bool>
