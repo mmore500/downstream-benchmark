@@ -78,7 +78,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -98,7 +98,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -118,7 +118,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -218,7 +218,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -238,7 +238,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -258,7 +258,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -340,7 +340,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -360,7 +360,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -380,7 +380,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -462,7 +462,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -482,7 +482,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -502,7 +502,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -602,7 +602,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -622,7 +622,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -642,7 +642,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -736,7 +736,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -756,7 +756,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -776,7 +776,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -852,7 +852,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -872,7 +872,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -892,7 +892,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -968,7 +968,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -988,7 +988,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1008,7 +1008,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1102,7 +1102,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1122,7 +1122,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1142,7 +1142,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1236,7 +1236,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1256,7 +1256,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1276,7 +1276,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1352,7 +1352,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1372,7 +1372,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1392,7 +1392,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1468,7 +1468,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1488,7 +1488,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1508,7 +1508,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1602,7 +1602,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1622,7 +1622,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1642,7 +1642,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1736,7 +1736,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1756,7 +1756,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1776,7 +1776,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1852,7 +1852,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1872,7 +1872,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1892,7 +1892,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1968,7 +1968,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -1988,7 +1988,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2008,7 +2008,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2028,7 +2028,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2048,7 +2048,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2068,7 +2068,7 @@
 \pgfusepath{clip}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2144,7 +2144,7 @@
 \begin{pgfscope}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.349020,0.490196,0.749020}%
+\definecolor{currentfill}{rgb}{0.570588,0.323529,0.555882}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2168,7 +2168,7 @@
 \begin{pgfscope}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.460784,0.749020,0.443137}%
+\definecolor{currentfill}{rgb}{0.419118,0.604412,0.536765}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
@@ -2192,7 +2192,7 @@
 \begin{pgfscope}%
 \pgfsetbuttcap%
 \pgfsetmiterjoin%
-\definecolor{currentfill}{rgb}{0.509804,0.383333,0.274510}%
+\definecolor{currentfill}{rgb}{0.509804,0.509804,0.509804}%
 \pgfsetfillcolor{currentfill}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
